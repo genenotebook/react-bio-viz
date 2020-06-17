@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "lint": "eslint . --ext .tsx"
+    "lint": "eslint . --ext .tsx",
+    "start:dev": "webpack-dev-server --watch"
   },
   "repository": {
     "type": "git",
@@ -35,7 +36,8 @@
     "ts-loader": "7.0.5",
     "typescript": "3.9.5",
     "webpack": "4.43.0",
-    "webpack-cli": "3.3.11"
+    "webpack-cli": "3.3.11",
+    "webpack-dev-server": "^3.11.0"
   },
   "peerDependencies": {
     "react": "^16.13.1",
