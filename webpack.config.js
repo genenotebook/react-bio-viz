@@ -27,8 +27,7 @@ module.exports = {
     new CleanWebpackPlugin()
   ],
   externals: {
-    'react': 'React',
-    'react-dom': 'ReactDOM'
+    'react': 'react',
   },
   output: {
     filename: 'bundle.js',
