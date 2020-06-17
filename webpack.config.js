@@ -26,9 +26,9 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin()
   ],
-  externals: {
+  /*externals: {
     'react': 'react',
-  },
+  },*/
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
