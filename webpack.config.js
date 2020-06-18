@@ -24,7 +24,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin({ verbose: true })
   ],
   externals: {
     'react': 'react',
