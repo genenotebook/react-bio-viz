@@ -10,6 +10,11 @@
     "jsx": "react",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true
-  }
+    "strict": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "./src/**/*",
+    "./demo/**/*"
+  ]
 }

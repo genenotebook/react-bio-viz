@@ -3,7 +3,12 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'production',
-  entry: path.join(__dirname, 'src', 'index.tsx'),
+  entry: path.resolve(__dirname, 'src', 'index.tsx'),
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    libraryTarget: 'commonjs2'
+  },
   devtool: 'inline-source-map',
   resolve: {
     extensions: ['.js', '.ts', '.tsx']
@@ -24,17 +29,10 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin({ verbose: true })
+    new CleanWebpackPlugin(),
   ],
-  externals: {
-    'react': 'react',
-  },
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    libraryTarget: 'commonjs2'
-  },
-  devServer: {
-    contentBase: path.join(__dirname, 'demo')
-  }
+  externals: [
+    'react',
+    'react-dom'
+  ],
 }

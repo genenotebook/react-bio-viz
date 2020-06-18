@@ -5,9 +5,9 @@
   "main": "./dist/bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
+    "build": "webpack --config webpack.config.js",
     "lint": "eslint . --ext .tsx",
-    "start:dev": "webpack-dev-server --watch"
+    "start:dev": "webpack-dev-server --watch --config webpack.dev.config.js"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "lodash": "4.17.15",
     "react-konva": "16.13.0-3",
     "source-map-loader": "1.0.0",
+    "static-site-generator-webpack-plugin": "^3.4.2",
     "ts-loader": "7.0.5",
     "typescript": "3.9.5",
     "webpack": "4.43.0",
@@ -44,6 +45,7 @@
     "react-dom": "^16.13.1"
   },
   "dependencies": {
-    "react": "^16.13.1"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }
