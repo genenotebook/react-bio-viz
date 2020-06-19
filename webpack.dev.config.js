@@ -8,22 +8,19 @@ const developmentOptions = {
     main: path.resolve(__dirname, 'demo/index.tsx')
   },
   output: {
-    filename: 'dev_bundle.js'
+    filename: 'dev_bundle.js',
+    globalObject: 'this'
   },
   mode: 'development',
   externals: undefined,
   devtool: 'inline-source-map',
-  plugins: [
-    ...config.plugins,
-    new StaticSiteGeneratorPlugin()
-  ],
   devServer: {
     open: true,
     hot: true,
-    index: path.resolve(__dirname, 'demo/index.tsx')
+    contentBase: path.resolve(__dirname, 'demo'),
+    publicPath: '/dist/',
+    writeToDisk: true
   }
 }
-
-console.log(Object.assign(config, developmentOptions))
 
 module.exports = Object.assign(config, developmentOptions)

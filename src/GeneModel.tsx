@@ -1,13 +1,165 @@
-import * as React from 'react';
+import React, { ReactElement } from 'react';
+import ReactResizeDetector from 'react-resize-detector';
+import { scaleLinear } from 'd3';
+import randomColor from 'randomcolor';
+import Color from 'color';
+import { groupBy, Dictionary } from 'lodash';
 
-export interface GeneModelProps { ID: string, data: Record<string, unknown> }
+interface SequenceInterval {
+  ID: string,
+  seqid: string,
+  source: string,
+  interval_type: string,
+  start: number,
+  end: number,
+  score: number | string,
+  strand: string,
+  phase: number | string,
+  attributes: Record<string, any>
+}
 
-export default function GeneModel({ ID, data }: GeneModelProps): JSX.Element {
-    return (
-        <div>
-            <h5>GeneModel {ID}</h5>
-            {data}
-            <svg />
-        </div>
-    )
+interface Gene extends SequenceInterval {
+  children: SequenceInterval[]
+}
+
+interface GeneModelProps {
+  gene: Gene,
+  width?: number
+}
+
+type ReactChildren = JSX.Element[] | JSX.Element;
+
+interface SequenceIntervalOptions {
+  interval: SequenceInterval, fill: Color<string>, scale: Function
+}
+
+function SequenceInterval({ interval, fill, scale }: SequenceIntervalOptions) {
+  const { start, end, interval_type } = interval
+  const height = interval_type === 'CDS' ? 10 : 4;
+  return (
+    <rect x={scale(start)} width={scale(end) - scale(start)} y={-height / 2} height={height} fill={fill.toString()} />
+  )
+}
+
+interface TranscriptOptions {
+  transcript: SequenceInterval, children: ReactChildren, scale: Function,
+  index: number,
+}
+
+function Transcript({ transcript, scale, index, children }: TranscriptOptions) {
+  const { start, end } = transcript;
+  return (
+    <g className='transcript' transform={`translate(0,${index * 14})`}>
+      <line
+        x1={scale(start)}
+        x2={scale(end)}
+        y1={0}
+        y2={0}
+        stroke='black'
+        markerEnd="url(#arrowEnd)"
+      />
+      {children}
+    </g>
+  )
+}
+
+interface GeneModelGroupOptions {
+  gene: Gene, children: ReactChildren, scale: Function
+}
+
+function GeneModelGroup({ gene, children, scale }: GeneModelGroupOptions) {
+  return (
+    <g className="genemodel" transform="translate(0,4)">
+      {
+        React.Children.map(children, child => (
+          React.cloneElement(child, { gene, scale })
+        ))
+      }
+    </g>
+  )
+}
+
+interface getTranscriptChildrenOptions {
+  transcript: SequenceInterval, intervals: Dictionary<SequenceInterval[]>
+}
+
+function getTranscriptChildren({
+  transcript, intervals
+}: getTranscriptChildrenOptions): SequenceInterval[] {
+  const children: SequenceInterval[] = []
+  for (const _intervals of Object.values(intervals)) {
+    for (const interval of _intervals) {
+      if (interval.attributes.parent.indexOf(transcript.ID) >= 0) {
+        children.push(interval)
+      }
+    }
+  }
+  return children.filter(c => c.interval_type !== 'mRNA')
+}
+
+export default function GeneModel({ gene, width = 500 }: GeneModelProps) {
+  const geneLength = gene.end - gene.start;
+  const padding = Math.round(0.1 * geneLength);
+  const start = Math.max(0, gene.start - padding);
+  const end = gene.end + padding;
+  const intervals = groupBy(gene.children, interval => interval.ID)
+  const transcripts = gene.children
+    .filter((child) => child.interval_type === 'mRNA');
+  const height = 14 * transcripts.length + 46;
+  const margin = {
+    top: 10,
+    bottom: 10,
+    left: 10,
+    right: 10,
+  };
+
+  const scale = scaleLinear()
+    .domain([start, end])
+    .range([margin.left, width - margin.right]);
+
+  const baseColor = new Color(randomColor({ seed: gene.ID }));
+
+  return (
+    <div>
+      <h5>GeneModel </h5>
+      <svg height={height} width={width}>
+        <GeneModelGroup gene={gene} scale={scale}>
+          {
+            transcripts.map((transcript: SequenceInterval, index) => {
+              const transcriptChildren = getTranscriptChildren({
+                transcript, intervals
+              })
+              return (
+                <Transcript
+                  scale={scale}
+                  key={transcript.ID}
+                  transcript={transcript}
+                  index={index}
+                >
+                  {
+                    transcriptChildren
+                      .map((interval: SequenceInterval) => (
+                        <SequenceInterval
+                          scale={scale}
+                          key={interval.ID}
+                          interval={interval}
+                          fill={baseColor.rgb()}
+                        />
+                      ))
+                  }
+                </Transcript>
+              )
+            })
+          }
+        </GeneModelGroup>
+        <defs>
+          <marker id="arrowEnd" markerWidth="16" markerHeight="10"
+            refX="0" refY="5" orient="auto">
+            <path d="M0,5 L15,5 L10,10 M10,0 L15,5" fill="none"
+              stroke="black" />
+          </marker>
+        </defs>
+      </svg>
+    </div >
+  )
 }
