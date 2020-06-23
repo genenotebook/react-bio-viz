@@ -9,7 +9,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'commonjs2'
   },
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   resolve: {
     extensions: ['.js', '.ts', '.tsx']
   },
@@ -17,7 +17,7 @@ module.exports = {
     rules: [
       {
         test: /\.ts(x?)$/,
-        exclude: /node_modules/,
+        exclude: /node_modules|demo/,
         use: 'ts-loader'
       },
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
@@ -34,5 +34,5 @@ module.exports = {
   externals: [
     'react',
     'react-dom'
-  ],
+  ]
 }

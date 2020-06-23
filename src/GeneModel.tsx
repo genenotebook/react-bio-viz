@@ -1,5 +1,5 @@
-import React, { ReactElement } from 'react';
-import ReactResizeDetector from 'react-resize-detector';
+import React from 'react';
+// import ReactResizeDetector from 'react-resize-detector';
 import { scaleLinear } from 'd3';
 import randomColor from 'randomcolor';
 import Color from 'color';
@@ -20,11 +20,6 @@ interface SequenceInterval {
 
 interface Gene extends SequenceInterval {
   children: SequenceInterval[]
-}
-
-interface GeneModelProps {
-  gene: Gene,
-  width?: number
 }
 
 type ReactChildren = JSX.Element[] | JSX.Element;
@@ -95,6 +90,11 @@ function getTranscriptChildren({
     }
   }
   return children.filter(c => c.interval_type !== 'mRNA')
+}
+
+interface GeneModelProps {
+  gene: Gene,
+  width?: number
 }
 
 export default function GeneModel({ gene, width = 500 }: GeneModelProps) {

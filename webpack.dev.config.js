@@ -19,7 +19,7 @@ const developmentOptions = {
     hot: true,
     contentBase: path.resolve(__dirname, 'demo'),
     publicPath: '/dist/',
-    writeToDisk: true
+    // writeToDisk: true
   }
 }
 

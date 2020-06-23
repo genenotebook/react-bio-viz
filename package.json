@@ -19,6 +19,7 @@
     "url": "https://github.com/genenotebook/react-bio-viz/issues"
   },
   "homepage": "https://github.com/genenotebook/react-bio-viz#readme",
+  "sideEffects": false,
   "devDependencies": {
     "@types/color": "^3.0.1",
     "@types/d3": "^5.7.2",
