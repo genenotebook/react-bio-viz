@@ -1,6 +1,6 @@
 {
   "name": "react-bio-viz",
-  "version": "0.0.3-0",
+  "version": "0.0.4-0",
   "description": "React components for biological data visualisation",
   "main": "./dist/bundle.js",
   "scripts": {
