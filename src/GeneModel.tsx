@@ -1,11 +1,10 @@
 import React from 'react';
-// import ReactResizeDetector from 'react-resize-detector';
-import { scaleLinear } from 'd3';
+import { scaleLinear, ScaleLinear } from 'd3';
 import randomColor from 'randomcolor';
 import Color from 'color';
 import { groupBy, Dictionary } from 'lodash';
 
-interface SequenceInterval {
+export interface SequenceInterval {
   ID: string,
   seqid: string,
   source: string,
@@ -15,20 +14,22 @@ interface SequenceInterval {
   score: number | string,
   strand: string,
   phase: number | string,
-  attributes: Record<string, any>
+  attributes: Record<string, string | string[] | undefined>
 }
 
-interface Gene extends SequenceInterval {
+export interface Gene extends SequenceInterval {
   children: SequenceInterval[]
 }
 
 type ReactChildren = JSX.Element[] | JSX.Element;
 
-interface SequenceIntervalOptions {
-  interval: SequenceInterval, fill: Color<string>, scale: Function
+interface SequenceIntervalProps {
+  interval: SequenceInterval,
+  fill: Color<string>,
+  scale: ScaleLinear<number, number>
 }
 
-function SequenceInterval({ interval, fill, scale }: SequenceIntervalOptions) {
+function SequenceInterval({ interval, fill, scale }: SequenceIntervalProps) {
   const { start, end, interval_type } = interval
   const height = interval_type === 'CDS' ? 10 : 4;
   return (
@@ -36,12 +37,14 @@ function SequenceInterval({ interval, fill, scale }: SequenceIntervalOptions) {
   )
 }
 
-interface TranscriptOptions {
-  transcript: SequenceInterval, children: ReactChildren, scale: Function,
+interface TranscriptProps {
+  transcript: SequenceInterval,
+  children: ReactChildren,
+  scale: ScaleLinear<number, number>,
   index: number,
 }
 
-function Transcript({ transcript, scale, index, children }: TranscriptOptions) {
+function Transcript({ transcript, scale, index, children }: TranscriptProps) {
   const { start, end } = transcript;
   return (
     <g className='transcript' transform={`translate(0,${index * 14})`}>
@@ -58,11 +61,13 @@ function Transcript({ transcript, scale, index, children }: TranscriptOptions) {
   )
 }
 
-interface GeneModelGroupOptions {
-  gene: Gene, children: ReactChildren, scale: Function
+interface GeneModelGroupProps {
+  gene: Gene,
+  children: ReactChildren,
+  scale: ScaleLinear<number, number>
 }
 
-function GeneModelGroup({ gene, children, scale }: GeneModelGroupOptions) {
+function GeneModelGroup({ gene, children, scale }: GeneModelGroupProps) {
   return (
     <g className="genemodel" transform="translate(0,4)">
       {
@@ -84,7 +89,8 @@ function getTranscriptChildren({
   const children: SequenceInterval[] = []
   for (const _intervals of Object.values(intervals)) {
     for (const interval of _intervals) {
-      if (interval.attributes.parent.indexOf(transcript.ID) >= 0) {
+      const intervalParents = interval.attributes.parent || []
+      if (intervalParents.indexOf(transcript.ID) >= 0) {
         children.push(interval)
       }
     }
@@ -120,8 +126,7 @@ export default function GeneModel({ gene, width = 500 }: GeneModelProps) {
   const baseColor = new Color(randomColor({ seed: gene.ID }));
 
   return (
-    <div>
-      <h5>GeneModel </h5>
+    <div className='genemodel'>
       <svg height={height} width={width}>
         <GeneModelGroup gene={gene} scale={scale}>
           {

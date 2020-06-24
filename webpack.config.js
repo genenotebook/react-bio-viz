@@ -17,7 +17,7 @@ module.exports = {
     rules: [
       {
         test: /\.ts(x?)$/,
-        exclude: /node_modules|demo/,
+        exclude: /node_modules/,
         use: 'ts-loader'
       },
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
