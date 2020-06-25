@@ -13,16 +13,26 @@ export interface MSAProps {
   height?: number,
   palette?: string,
   rowHeight?: number,
+  rowHeaderWidth?: number,
+  showRowHeader?: boolean,
   colWidth?: number,
   showText?: boolean
 }
 
 export default function MultipleSequenceAlignment({
-  msa, width, height, palette = 'polarity', rowHeight = 10, colWidth = 10,
+  msa,
+  width,
+  height,
+  palette = 'individual',
+  rowHeight = 10,
+  rowHeaderWidth = 100,
+  showRowHeader = true,
+  colWidth = 10,
   showText = true
-}: MSAProps) {
+}: MSAProps): JSX.Element {
+  const _rowHeaderWidth = showRowHeader ? rowHeaderWidth : 0;
   const _width = typeof width === 'undefined'
-    ? Object.values(msa)[0].seq.length * colWidth
+    ? (Object.values(msa)[0].seq.length * colWidth) + _rowHeaderWidth
     : width
   const _height = typeof height === 'undefined'
     ? msa.length * rowHeight
@@ -36,33 +46,47 @@ export default function MultipleSequenceAlignment({
         <Layer>
           {
             msa.map(({ header, seq }, seq_i) => {
-              return seq.split('').map((letter, char_i) => {
-                return (
-                  <React.Fragment key={char_i}>
-                    <Rect
-                      x={char_i * colWidth}
-                      y={seq_i * rowHeight}
-                      width={colWidth}
-                      height={rowHeight}
-                      fill={
-                        colorMap.get(letter)
-                      }
-                      stroke='light-grey'
-                      strokeWidth={colWidth > 1 ? .05 : 0}
-                    />
-                    {(showText && colWidth >= 10) &&
-                      <Text
-                        text={letter.toUpperCase()}
-                        x={(char_i * colWidth) + 2}
-                        y={(seq_i * rowHeight + 2)}
-                        fontSize={7}
-                        fontFamily='mono'
-                        align='center'
-                      />
-                    }
-                  </React.Fragment>
-                )
-              })
+              return (
+                <React.Fragment key={header}>
+                  <Text
+                    text={header}
+                    x={0}
+                    y={(seq_i * rowHeight + 2)}
+                    fontSize={7}
+                    fontFamily='mono'
+                    align='left'
+                  />
+                  {
+                    seq.split('').map((letter, char_i) => {
+                      return (
+                        <React.Fragment key={char_i}>
+                          <Rect
+                            x={(char_i * colWidth) + _rowHeaderWidth}
+                            y={seq_i * rowHeight}
+                            width={colWidth}
+                            height={rowHeight}
+                            fill={
+                              colorMap.get(letter)
+                            }
+                            stroke='white'
+                            strokeWidth={colWidth > 1 ? .5 : 0}
+                          />
+                          {(showText && colWidth >= 10) &&
+                            <Text
+                              text={letter.toUpperCase()}
+                              x={(char_i * colWidth) + _rowHeaderWidth + 2}
+                              y={(seq_i * rowHeight + 2)}
+                              fontSize={7}
+                              fontFamily='mono'
+                              align='center'
+                            />
+                          }
+                        </React.Fragment>
+                      )
+                    })
+                  }
+                </React.Fragment>
+              )
             })
           }
         </Layer>

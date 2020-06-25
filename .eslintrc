@@ -7,9 +7,11 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended"
   ],
   "rules": {
-    "no-console": 2
+    "no-console": 2,
+    "react/jsx-uses-vars": 1
   }
 }

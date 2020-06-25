@@ -103,7 +103,9 @@ interface GeneModelProps {
   width?: number
 }
 
-export default function GeneModel({ gene, width = 500 }: GeneModelProps) {
+export default function GeneModel({
+  gene, width = 500
+}: GeneModelProps): JSX.Element {
   const geneLength = gene.end - gene.start;
   const padding = Math.round(0.1 * geneLength);
   const start = Math.max(0, gene.start - padding);

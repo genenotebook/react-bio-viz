@@ -11,7 +11,12 @@ export default function App(): JSX.Element {
       <h5>GeneModel </h5>
       <GeneModel gene={gene} />
       <h5>Multiple Sequence Alignment (small)</h5>
-      <MultipleSequenceAlignment msa={msa} colWidth={1} rowHeight={5} />
+      <MultipleSequenceAlignment
+        msa={msa}
+        colWidth={1}
+        rowHeight={5}
+        showRowHeader={false}
+      />
       <h5>Multiple Sequence Alignment (big)</h5>
       <MultipleSequenceAlignment msa={msa} />
     </div>
