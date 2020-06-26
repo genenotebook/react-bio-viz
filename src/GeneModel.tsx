@@ -14,7 +14,7 @@ export interface SequenceInterval {
   score: number | string,
   strand: string,
   phase: number | string,
-  attributes: Record<string, string | string[] | undefined>
+  attributes: Record<string, any>
 }
 
 export interface Gene extends SequenceInterval {

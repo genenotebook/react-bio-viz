@@ -1,4 +1,5 @@
 import GeneModel from './GeneModel'
 import MultipleSequenceAlignment from './MultipleSequenceAlignment'
+import Tree from './Tree'
 
-export { GeneModel, MultipleSequenceAlignment }
+export { GeneModel, MultipleSequenceAlignment, Tree }
