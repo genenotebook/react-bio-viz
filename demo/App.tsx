@@ -19,10 +19,10 @@ export default function App(): JSX.Element {
         rowHeight={5}
         showRowHeader={false}
       />
-      {/*
+
       <h5>Multiple Sequence Alignment (big)</h5>
       <MultipleSequenceAlignment msa={msa} />
-      */}
+
       <h5>Phylogenetic tree</h5>
       <Tree tree={tree} />
     </div>
