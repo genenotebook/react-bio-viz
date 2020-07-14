@@ -41,7 +41,7 @@
     "konva": "7.0.3",
     "lodash": "4.17.19",
     "prop-types": "15.7.2",
-    "randomcolor": "0.5.4",
+    "randomcolor": "0.6.2",
     "react-konva": "16.13.0-3",
     "react-resize-detector": "5.0.6",
     "source-map-loader": "1.0.1",
