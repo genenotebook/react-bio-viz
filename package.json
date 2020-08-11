@@ -42,7 +42,7 @@
     "lodash": "4.17.19",
     "prop-types": "15.7.2",
     "randomcolor": "0.6.2",
-    "react-konva": "16.13.0-5",
+    "react-konva": "16.13.0-6",
     "react-resize-detector": "5.0.6",
     "source-map-loader": "1.0.1",
     "static-site-generator-webpack-plugin": "3.4.2",
