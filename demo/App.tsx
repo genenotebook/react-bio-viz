@@ -3,7 +3,8 @@ import React from 'react';
 import { GeneModel, MultipleSequenceAlignment, Tree } from '../src/index'
 
 import gene from './data/genemodel.json'
-import msa from './data/multiple_sequence_alignment.json'
+// import msa from './data/multiple_sequence_alignment.json'
+import msa from './data/msa.json'
 import tree from './data/tree.json'
 
 export default function App(): JSX.Element {
@@ -19,10 +20,10 @@ export default function App(): JSX.Element {
         rowHeight={5}
         showRowHeader={false}
       />
-
+      {/*
       <h5>Multiple Sequence Alignment (big)</h5>
       <MultipleSequenceAlignment msa={msa} />
-
+      */}
       <h5>Phylogenetic tree</h5>
       <Tree tree={tree} />
     </div>
