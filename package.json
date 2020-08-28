@@ -39,7 +39,7 @@
     "eslint": "7.7.0",
     "eslint-plugin-react": "7.20.5",
     "konva": "7.0.4",
-    "lodash": "4.17.19",
+    "lodash": "4.17.20",
     "prop-types": "15.7.2",
     "randomcolor": "0.6.2",
     "react-konva": "16.13.0-5",
