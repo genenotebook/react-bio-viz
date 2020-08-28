@@ -4,7 +4,7 @@ import { aaColors, ColorMap } from './util'
 
 export interface SeqObject {
   header: string,
-  seq: string
+  sequence: string
 }
 
 export interface MSAProps {
@@ -32,7 +32,7 @@ export default function MultipleSequenceAlignment({
 }: MSAProps): JSX.Element {
   const _rowHeaderWidth = showRowHeader ? rowHeaderWidth : 0;
   const _width = typeof width === 'undefined'
-    ? (Object.values(msa)[0].seq.length * colWidth) + _rowHeaderWidth
+    ? (Object.values(msa)[0].sequence.length * colWidth) + _rowHeaderWidth
     : width
   const _height = typeof height === 'undefined'
     ? msa.length * rowHeight
@@ -45,7 +45,7 @@ export default function MultipleSequenceAlignment({
       <Stage width={_width} height={_height}>
         <Layer>
           {
-            msa.map(({ header, seq }, seq_i) => {
+            msa.map(({ header, sequence }, seq_i) => {
               return (
                 <React.Fragment key={header}>
                   <Text
@@ -57,7 +57,7 @@ export default function MultipleSequenceAlignment({
                     align='left'
                   />
                   {
-                    seq.split('').map((letter, char_i) => {
+                    sequence.split('').map((letter, char_i) => {
                       return (
                         <React.Fragment key={char_i}>
                           <Rect
