@@ -2,32 +2,55 @@ import React from 'react';
 import { cluster, hierarchy } from 'd3';
 import randomColor from 'randomcolor';
 
-function TreeBranch({ node, cladogram }: TreeNodeProps) {
-  const offset = cladogram ? 0 : 20;
-  const multiplier = cladogram ? 1 : -10;
+const ADDITIVE_OFFSET = 400;
+const ADDITIVE_MULTIPLIER = -120;
+
+
+function TreeBranch({ node, cladogram, shadeBranchBySupport }: TreeNodeProps) {
+  const offset = cladogram ? 0 : ADDITIVE_OFFSET;
+  const multiplier = cladogram ? 1 : ADDITIVE_MULTIPLIER;
   const value = cladogram ? 'y' : 'value';
-  const style = { fill: 'none', stroke: 'black', strokeWidth: 1 };
+  const style = {
+    fill: 'none',
+    stroke: 'black',
+    strokeWidth: 1,
+    opacity: shadeBranchBySupport
+      ? node.parent.data.name as unknown as number / 100
+      : 1.
+  };
   const d = `M${offset + (node.parent[value] * multiplier)},${node.parent.x} 
       L${offset + (node.parent[value] * multiplier)},${node.x} 
       L${offset + (node[value] * multiplier)},${node.x}`;
   return <path d={d} style={style} />;
 }
 
-function TipNode({ node, cladogram }: TreeNodeProps) {
-  const { data, x, y } = node;
-  const { ID, name } = data;
-  const fill = randomColor({ seed: name.slice(0, 3) });
+function TipNode({ node, cladogram, color_regexp }: TreeNodeProps) {
+  const { data, x } = node;
+  const { name } = data;
+  const value = cladogram ? 'y' : 'value';
+  const offset = cladogram ? 0 : ADDITIVE_OFFSET;
+  const multiplier = cladogram ? 1 : ADDITIVE_MULTIPLIER;
+  const y = offset + (node[value] * multiplier)
+  const colorSeed = typeof color_regexp !== 'undefined'
+    ? (new RegExp(color_regexp).exec(name) || ['', 'name'])[1]
+    : name
+  const fill = randomColor({ seed: colorSeed });
   const style = { fill };
   return (
     <g className="tipnode">
-      <circle className="orthogroup-node" cy={x} cx={y} r="4.5" style={style} />
-      <text x={y + 6} y={x + 4} fontSize="10">{name}</text>
+      <title>{name}</title>
+      <circle className="tipnode" cy={x} cx={y + 4} r="4.5" style={style} />
+      <text x={y + 10} y={x + 4} fontSize="10">{name}</text>
     </g>
   );
 }
 
 function InternalNode({ node, cladogram }: TreeNodeProps) {
-  const { data, x, y } = node;
+  const { data, x } = node;
+  const value = cladogram ? 'y' : 'value';
+  const offset = cladogram ? 0 : ADDITIVE_OFFSET;
+  const multiplier = cladogram ? 1 : ADDITIVE_MULTIPLIER;
+  const y = offset + (node[value] * multiplier)
   const { name } = data;
   return (
     <text x={y + 3} y={x + 3} fontSize="10">
@@ -38,18 +61,42 @@ function InternalNode({ node, cladogram }: TreeNodeProps) {
 
 interface TreeNodeProps {
   node: Node,
-  cladogram: boolean
+  cladogram: boolean,
+  showSupportValues?: boolean,
+  shadeBranchBySupport?: boolean,
+  color_regexp?: string
 }
 
-function TreeNode({ node, cladogram }: TreeNodeProps) {
-  return typeof node.children === 'undefined'
-    ? <TipNode node={node} cladogram={cladogram} />
-    : <InternalNode node={node} cladogram={cladogram} />;
+function TreeNode({
+  node,
+  cladogram,
+  showSupportValues,
+  color_regexp
+}: TreeNodeProps) {
+  if (typeof node.children === 'undefined') {
+    return (
+      <TipNode
+        node={node}
+        cladogram={cladogram}
+        showSupportValues={showSupportValues}
+        color_regexp={color_regexp}
+      />
+    )
+  } else if (showSupportValues) {
+    return (
+      <InternalNode
+        node={node}
+        cladogram={cladogram}
+      />
+    )
+  }
+  return null
 }
 
 interface Tree {
-  ID: string | number,
+  ID?: string | number,
   name: string,
+  color_regex?: string,
   length: number,
   children: Tree[],
 }
@@ -69,23 +116,29 @@ interface TreeProps {
   tree: Tree,
   height?: number,
   width?: number,
-  cladogram?: boolean
+  cladogram?: boolean,
+  showSupportValues?: boolean,
+  shadeBranchBySupport?: boolean,
+  color_regexp?: string
 }
 
 export default function Tree({
   tree,
-  height = 500,
-  width = 500,
-  cladogram = true
+  height = 1100,
+  width = 1000,
+  cladogram = false,
+  showSupportValues = true,
+  shadeBranchBySupport = true,
+  color_regexp = ' \\[([A-Za-z0-9\. ]+)\\]'
 }: TreeProps): JSX.Element {
   const margin = {
     top: 10,
     bottom: 10,
     left: 20,
-    right: 100,
+    right: 500,
   };
 
-  const treeMap = cluster()
+  const treeLayout = cluster()
     .size([
       height - margin.top - margin.bottom,
       width - margin.left - margin.right,
@@ -94,7 +147,7 @@ export default function Tree({
 
   const treeRoot = hierarchy(tree, (node) => node.children);
 
-  const treeData = treeMap(treeRoot).sum((node: any) => node.length);
+  const treeData = treeLayout(treeRoot).sum((node: any) => node.length);
 
   const nodes = treeData.descendants().filter((node) => node.parent);
 
@@ -105,8 +158,17 @@ export default function Tree({
           {
             nodes.map((node: any) => (
               <React.Fragment key={`${node.x}_${node.y}`}>
-                <TreeBranch node={node} cladogram={cladogram} />
-                <TreeNode node={node} cladogram={cladogram} />
+                <TreeBranch
+                  node={node}
+                  cladogram={cladogram}
+                  shadeBranchBySupport={shadeBranchBySupport}
+                />
+                <TreeNode
+                  node={node}
+                  cladogram={cladogram}
+                  showSupportValues={showSupportValues}
+                  color_regexp={color_regexp}
+                />
               </React.Fragment>
             ))
           }

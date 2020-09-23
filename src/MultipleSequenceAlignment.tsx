@@ -1,5 +1,4 @@
-import React from 'react';
-import { Stage, Layer, Rect, Text } from 'react-konva';
+import React, { useEffect, useRef } from 'react';
 import { aaColors, ColorMap } from './util'
 
 export interface SeqObject {
@@ -40,57 +39,51 @@ export default function MultipleSequenceAlignment({
   const colorMap: ColorMap = aaColors.has(palette)
     ? aaColors.get(palette) as ColorMap
     : aaColors.get('polarity') as ColorMap
-  return (
-    <div className='multiple-sequence-alignment'>
-      <Stage width={_width} height={_height}>
-        <Layer>
-          {
-            msa.map(({ header, sequence }, seq_i) => {
-              return (
-                <React.Fragment key={header}>
-                  <Text
-                    text={header}
-                    x={0}
-                    y={(seq_i * rowHeight + 2)}
-                    fontSize={7}
-                    fontFamily='mono'
-                    align='left'
-                  />
-                  {
-                    sequence.split('').map((letter, char_i) => {
-                      return (
-                        <React.Fragment key={char_i}>
-                          <Rect
-                            x={(char_i * colWidth) + _rowHeaderWidth}
-                            y={seq_i * rowHeight}
-                            width={colWidth}
-                            height={rowHeight}
-                            fill={
-                              colorMap.get(letter)
-                            }
-                            stroke='white'
-                            strokeWidth={colWidth > 1 ? .5 : 0}
-                          />
-                          {(showText && colWidth >= 10) &&
-                            <Text
-                              text={letter.toUpperCase()}
-                              x={(char_i * colWidth) + _rowHeaderWidth + 2}
-                              y={(seq_i * rowHeight + 2)}
-                              fontSize={7}
-                              fontFamily='mono'
-                              align='center'
-                            />
-                          }
-                        </React.Fragment>
-                      )
-                    })
-                  }
-                </React.Fragment>
-              )
-            })
+
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    if (canvasRef && canvasRef.current) {
+      const canvas = canvasRef.current
+      const context = canvas.getContext('2d')
+      if (context) {
+        context.font = `${rowHeight - 2}px mono`;
+        msa.map(({ header, sequence }, seq_i) => {
+          // header text
+          if (showRowHeader) {
+            context.fillStyle = 'black';
+            context.textAlign = 'left';
+            context.fillText(
+              header, // text
+              0, // x
+              ((seq_i + 0.8) * rowHeight) // y
+            )
           }
-        </Layer>
-      </Stage>
-    </div>
-  )
+          // individual nucl/aa
+          sequence.split('').map((letter, char_i) => {
+            // draw a square
+            context.fillStyle = colorMap.get(letter) || '#000000';
+            context.fillRect(
+              (char_i * colWidth) + _rowHeaderWidth, // x
+              seq_i * rowHeight, // y
+              width = colWidth,
+              height = rowHeight
+            )
+            // add the letter
+            if (showText && colWidth >= 10 && rowHeight >= 10) {
+              context.fillStyle = 'black';
+              context.textAlign = 'center';
+              context.fillText(
+                letter, // text
+                _rowHeaderWidth + ((char_i + 0.5) * colWidth), // x
+                (seq_i + 0.8) * rowHeight // y
+              )
+            }
+          })
+        })
+      }
+    }
+  }, [msa])
+
+  return <canvas ref={canvasRef} height={_height} width={_width} />
 }
