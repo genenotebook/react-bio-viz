@@ -22,7 +22,7 @@
   "sideEffects": false,
   "devDependencies": {
     "@types/color": "3.0.1",
-    "@types/d3": "5.16.2",
+    "@types/d3": "5.16.3",
     "@types/jest": "26.0.13",
     "@types/node": "14.11.5",
     "@types/lodash": "4.14.161",
