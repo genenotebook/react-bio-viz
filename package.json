@@ -22,7 +22,7 @@
   "sideEffects": false,
   "devDependencies": {
     "@types/color": "3.0.1",
-    "@types/d3": "5.16.4",
+    "@types/d3": "6.3.0",
     "@types/jest": "26.0.20",
     "@types/node": "14.14.5",
     "@types/lodash": "4.14.168",
@@ -35,7 +35,7 @@
     "@typescript-eslint/parser": "4.15.0",
     "clean-webpack-plugin": "3.0.0",
     "color": "3.1.3",
-    "d3": "6.2.0",
+    "d3": "6.5.0",
     "eslint": "7.19.0",
     "eslint-plugin-react": "7.22.0",
     "konva": "7.2.2",
