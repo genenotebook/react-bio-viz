@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/color": "3.0.1",
     "@types/d3": "6.3.0",
-    "@types/jest": "26.0.22",
+    "@types/jest": "26.0.23",
     "@types/node": "14.14.44",
     "@types/lodash": "4.14.168",
     "@types/prop-types": "15.7.3",
