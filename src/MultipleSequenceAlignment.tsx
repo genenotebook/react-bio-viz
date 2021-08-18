@@ -48,7 +48,7 @@ export default function MultipleSequenceAlignment({
       const context = canvas.getContext('2d')
       if (context) {
         context.font = `${rowHeight - 2}px mono`;
-        msa.map(({ header, sequence }, seq_i) => {
+        msa.forEach(({ header, sequence }, seq_i) => {
           // header text
           if (showRowHeader) {
             context.fillStyle = 'black';
@@ -60,7 +60,7 @@ export default function MultipleSequenceAlignment({
             )
           }
           // individual nucl/aa
-          sequence.split('').map((letter, char_i) => {
+          sequence.split('').forEach((letter, char_i) => {
             // draw a square
             context.fillStyle = colorMap.get(letter) || '#000000';
             context.fillRect(

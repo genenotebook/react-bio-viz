@@ -2,24 +2,34 @@ import React, { useReducer } from 'react';
 
 import { GeneModel, MultipleSequenceAlignment, Tree } from '../src/index'
 
-import gene from './data/genemodel.json'
+// import gene from './data/genemodel.json'
 // import msa from './data/multiple_sequence_alignment.json'
 // import msa from './data/msa.json'
 // import msa from './data/taq_pol_nr_blast.msa.json'
-import msa from './data/plt1_test.msa.json'
+// import msa from './data/plt1_test.msa.json'
 // import tree from './data/tree.json'
-import tree from './data/test.fixed_names.tree.json'
+// import tree from './data/test.fixed_names.tree.json'
+
+function loadJson(filename: string): any {
+  const request = new XMLHttpRequest();
+  request.overrideMimeType("application/json");
+  request.open('GET', filename, false);
+  request.send(null)
+  return JSON.parse(request.responseText);
+}
 
 type State = {
   showCladogram: boolean,
   showSupportValues?: boolean,
-  shadeBranchBySupport?: boolean
+  shadeBranchBySupport?: boolean,
+  fontSize?: number
 }
 
 type Action =
   | { type: 'toggleShowCladogram' }
   | { type: 'toggleShowSupportValues' }
   | { type: 'toggleShadeBranchBySupport' }
+  | { type: 'setFontSize', value: number }
 
 function stateReducer(state: State, action: Action): State {
   switch (action.type) {
@@ -29,24 +39,34 @@ function stateReducer(state: State, action: Action): State {
       return { ...state, showSupportValues: !state.showSupportValues }
     case 'toggleShadeBranchBySupport':
       return { ...state, shadeBranchBySupport: !state.shadeBranchBySupport }
+    case 'setFontSize':
+      return { ...state, fontSize: action.value }
     default:
       throw new Error('Invalid state operation');
   }
 }
 
+declare const msa: any;
+declare const tree: any;
+
+
 export default function App(): JSX.Element {
+  const tree = loadJson('./data/tree.json');
+  const msa = loadJson('./data/msa.json');
+  const geneModel = loadJson('./data/genemodel.json');
   const [state, dispatch] = useReducer(stateReducer, {
-    showCladogram: true,
+    showCladogram: false,
     showSupportValues: true,
-    shadeBranchBySupport: false
+    shadeBranchBySupport: false,
+    fontSize: 10
   })
 
   return (
     <div className='container'>
       {/*
       <h5>GeneModel </h5>
-      <GeneModel gene={gene} />
-      */}
+      <GeneModel gene={geneModel} />
+
       <h5>Multiple Sequence Alignment (overview)</h5>
       <MultipleSequenceAlignment
         msa={msa}
@@ -65,7 +85,7 @@ export default function App(): JSX.Element {
         rowHeaderWidth={550}
         palette={'individual'}
       />
-
+      */}
       <h5>Phylogenetic tree</h5>
       <label>
         <input
@@ -91,11 +111,24 @@ export default function App(): JSX.Element {
         />
         Shade branches by support values
       </label>
+      <br/>
+      <label>
+        Font size
+        <input
+          type='number'
+          value={state.fontSize}
+          onChange={({target: { value }}) => dispatch({
+            type: 'setFontSize',
+            value: Number(value)
+          })}
+        />
+      </label>
       <Tree
         tree={tree}
         cladogram={state.showCladogram}
         showSupportValues={state.showSupportValues}
         shadeBranchBySupport={state.shadeBranchBySupport}
+        fontSize={state.fontSize}
       />
     </div>
   )

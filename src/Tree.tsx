@@ -2,14 +2,7 @@ import React from 'react';
 import { cluster, hierarchy } from 'd3';
 import randomColor from 'randomcolor';
 
-const ADDITIVE_OFFSET = 400;
-const ADDITIVE_MULTIPLIER = -120;
-
-
-function TreeBranch({ node, cladogram, shadeBranchBySupport }: TreeNodeProps) {
-  const offset = cladogram ? 0 : ADDITIVE_OFFSET;
-  const multiplier = cladogram ? 1 : ADDITIVE_MULTIPLIER;
-  const value = cladogram ? 'y' : 'value';
+function TreeBranch({ node, shadeBranchBySupport }: TreeNodeProps) {
   const style = {
     fill: 'none',
     stroke: 'black',
@@ -18,42 +11,41 @@ function TreeBranch({ node, cladogram, shadeBranchBySupport }: TreeNodeProps) {
       ? node.parent.data.name as unknown as number / 100
       : 1.
   };
-  const d = `M${offset + (node.parent[value] * multiplier)},${node.parent.x} 
-      L${offset + (node.parent[value] * multiplier)},${node.x} 
-      L${offset + (node[value] * multiplier)},${node.x}`;
+  const d = `M${node.parent.y},${node.parent.x}
+    L${node.parent.y},${node.x}
+    L${node.y},${node.x}`;
   return <path d={d} style={style} />;
 }
 
-function TipNode({ node, cladogram, color_regexp }: TreeNodeProps) {
-  const { data, x } = node;
-  const { name } = data;
-  const value = cladogram ? 'y' : 'value';
-  const offset = cladogram ? 0 : ADDITIVE_OFFSET;
-  const multiplier = cladogram ? 1 : ADDITIVE_MULTIPLIER;
-  const y = offset + (node[value] * multiplier)
-  const colorSeed = typeof color_regexp !== 'undefined'
-    ? (new RegExp(color_regexp).exec(name) || ['', 'name'])[1]
+function TipNode({ node, colorFunction, fontSize, alignTips }: TreeNodeProps) {
+  const { data: { name }, x} = node;
+  const textY = node.tipAlignY || (node.y + 10);
+  const nodeY = node.y + 4;
+  const colorSeed = typeof colorFunction !== 'undefined'
+    ? colorFunction(node)
     : name
   const fill = randomColor({ seed: colorSeed });
-  const style = { fill };
+  const circleStyle = { fill };
+  const lineStyle = {
+    stroke: 'darkgrey',
+    strokeWidth: 1,
+    strokeDasharray: '1,2'
+  }
   return (
     <g className="tipnode">
       <title>{name}</title>
-      <circle className="tipnode" cy={x} cx={y + 4} r="4.5" style={style} />
-      <text x={y + 10} y={x + 4} fontSize="10">{name}</text>
+      <line x1={nodeY} x2={textY} y1={x} y2={x} style={lineStyle}/>
+      <circle className="tipnode" cy={x} cx={nodeY} r="4.5" style={circleStyle} />
+      <text x={textY} y={x + 4} fontSize={fontSize}>{name}</text>
     </g>
   );
 }
 
-function InternalNode({ node, cladogram }: TreeNodeProps) {
-  const { data, x } = node;
-  const value = cladogram ? 'y' : 'value';
-  const offset = cladogram ? 0 : ADDITIVE_OFFSET;
-  const multiplier = cladogram ? 1 : ADDITIVE_MULTIPLIER;
-  const y = offset + (node[value] * multiplier)
+function InternalNode({ node, fontSize }: TreeNodeProps) {
+  const { data, x, y } = node;
   const { name } = data;
   return (
-    <text x={y + 3} y={x + 3} fontSize="10">
+    <text x={y + 3} y={x + 3} fontSize={fontSize}>
       {name}
     </text>
   );
@@ -61,32 +53,35 @@ function InternalNode({ node, cladogram }: TreeNodeProps) {
 
 interface TreeNodeProps {
   node: Node,
-  cladogram: boolean,
   showSupportValues?: boolean,
   shadeBranchBySupport?: boolean,
-  color_regexp?: string
+  colorFunction?: CallableFunction,
+  fontSize?: number,
+  alignTips?: boolean
 }
 
 function TreeNode({
   node,
-  cladogram,
   showSupportValues,
-  color_regexp
+  colorFunction,
+  fontSize,
+  alignTips
 }: TreeNodeProps) {
   if (typeof node.children === 'undefined') {
     return (
       <TipNode
         node={node}
-        cladogram={cladogram}
+        fontSize={fontSize}
         showSupportValues={showSupportValues}
-        color_regexp={color_regexp}
+        colorFunction={colorFunction}
+        alignTips={alignTips}
       />
     )
   } else if (showSupportValues) {
     return (
       <InternalNode
         node={node}
-        cladogram={cladogram}
+        fontSize={fontSize}
       />
     )
   }
@@ -110,6 +105,7 @@ interface Node {
   value: number,
   x: number,
   y: number,
+  tipAlignY?: number
 }
 
 interface TreeProps {
@@ -119,17 +115,37 @@ interface TreeProps {
   cladogram?: boolean,
   showSupportValues?: boolean,
   shadeBranchBySupport?: boolean,
-  color_regexp?: string
+  colorFunction?: CallableFunction,
+  fontSize?: number,
+  alignTips?: boolean
+}
+
+function defaultColorFunction(node: Node): string {
+  const { data } =  node;
+  const { name } = data;
+  return name.slice(0,5);
+}
+
+function setNodeHeight(node: Node, currentHeight: number, scalingFactor: number): void {
+  node.tipAlignY = node.y;
+  node.y = (currentHeight + node.data.length) * scalingFactor;
+  if (node.children) {
+    node.children.forEach((childNode) => (
+      setNodeHeight(childNode, currentHeight + node.data.length, scalingFactor)
+    ))
+  }
 }
 
 export default function Tree({
   tree,
-  height = 1100,
+  height = 900,
   width = 1000,
   cladogram = false,
   showSupportValues = true,
   shadeBranchBySupport = true,
-  color_regexp = ' \\[([A-Za-z0-9\. ]+)\\]'
+  colorFunction = defaultColorFunction,
+  fontSize = 10,
+  alignTips = true
 }: TreeProps): JSX.Element {
   const margin = {
     top: 10,
@@ -147,8 +163,14 @@ export default function Tree({
 
   const treeRoot = hierarchy(tree, (node) => node.children);
 
-  const treeData = treeLayout(treeRoot).sum((node: any) => node.length);
+  const treeData = treeLayout(treeRoot).sum((node: any) => node.depth);
 
+  if (!cladogram) {
+    const initialHeight = 0;
+    const scalingFactor = 400;
+    setNodeHeight(treeData as Node, initialHeight, scalingFactor);
+  }
+  
   const nodes = treeData.descendants().filter((node) => node.parent);
 
   return (
@@ -160,14 +182,15 @@ export default function Tree({
               <React.Fragment key={`${node.x}_${node.y}`}>
                 <TreeBranch
                   node={node}
-                  cladogram={cladogram}
+                  fontSize={fontSize}
                   shadeBranchBySupport={shadeBranchBySupport}
                 />
                 <TreeNode
                   node={node}
-                  cladogram={cladogram}
+                  fontSize={fontSize}
                   showSupportValues={showSupportValues}
-                  color_regexp={color_regexp}
+                  colorFunction={colorFunction}
+                  alignTips={alignTips}
                 />
               </React.Fragment>
             ))
