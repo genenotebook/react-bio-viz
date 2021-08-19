@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/genenotebook/react-bio-viz#readme",
   "sideEffects": false,
+  "files": [ "/dist" ],
   "devDependencies": {
     "@types/color": "3.0.1",
     "@types/d3": "6.7.0",
