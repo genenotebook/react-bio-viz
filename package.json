@@ -37,7 +37,7 @@
     "clean-webpack-plugin": "3.0.0",
     "color": "4.0.1",
     "d3": "6.7.0",
-    "eslint": "7.27.0",
+    "eslint": "7.32.0",
     "eslint-plugin-react": "7.24.0",
     "konva": "8.0.2",
     "lodash": "4.17.21",
