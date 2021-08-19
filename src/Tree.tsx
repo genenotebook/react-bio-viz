@@ -19,7 +19,9 @@ function TreeBranch({ node, shadeBranchBySupport }: TreeNodeProps) {
 
 function TipNode({ node, colorFunction, fontSize, alignTips }: TreeNodeProps) {
   const { data: { name }, x} = node;
-  const textY = node.tipAlignY || (node.y + 10);
+  const textY = alignTips
+    ? node.tipAlignY || (node.y + 10)
+    : node.y + 10;
   const nodeY = node.y + 4;
   const colorSeed = typeof colorFunction !== 'undefined'
     ? colorFunction(node)
