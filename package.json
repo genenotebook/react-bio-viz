@@ -1,6 +1,6 @@
 {
   "name": "react-bio-viz",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "React components for biological data visualisation",
   "main": "./dist/bundle.js",
   "scripts": {
@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/genenotebook/react-bio-viz#readme",
   "sideEffects": false,
-  "files": [ "/dist" ],
+  "files": [
+    "/dist"
+  ],
   "devDependencies": {
     "@types/color": "3.0.1",
     "@types/d3": "6.7.0",
