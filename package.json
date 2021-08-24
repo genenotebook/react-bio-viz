@@ -23,7 +23,7 @@
   "sideEffects": false,
   "files": [ "/dist" ],
   "devDependencies": {
-    "@types/color": "3.0.1",
+    "@types/color": "3.0.2",
     "@types/d3": "7.0.0",
     "@types/jest": "26.0.24",
     "@types/node": "14.17.11",
