@@ -17,9 +17,12 @@ const developmentOptions = {
   devServer: {
     open: true,
     hot: true,
-    contentBase: path.resolve(__dirname, 'demo'),
-    publicPath: '/dist/',
-    // writeToDisk: true
+    static: {
+      directory: path.resolve(__dirname, 'demo')
+    },
+    devMiddleware: {
+      publicPath: '/dist/',
+    },
   }
 }
 

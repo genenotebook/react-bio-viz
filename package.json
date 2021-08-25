@@ -8,7 +8,7 @@
     "build": "webpack --config webpack.config.js",
     "build:app": "webpack --config webpack.app.config.js",
     "lint": "eslint . --ext .tsx",
-    "start:dev": "webpack-dev-server --watch --config webpack.dev.config.js"
+    "start:dev": "webpack-dev-server --config webpack.dev.config.js"
   },
   "repository": {
     "type": "git",

@@ -22,7 +22,9 @@ type State = {
   showCladogram: boolean,
   showSupportValues?: boolean,
   shadeBranchBySupport?: boolean,
-  fontSize?: number
+  fontSize?: number,
+  width?: number,
+  height?: number,
 }
 
 type Action =
@@ -30,6 +32,8 @@ type Action =
   | { type: 'toggleShowSupportValues' }
   | { type: 'toggleShadeBranchBySupport' }
   | { type: 'setFontSize', value: number }
+  | { type: 'setWidth', value: number }
+  | { type: 'setHeight', value: number }
 
 function stateReducer(state: State, action: Action): State {
   switch (action.type) {
@@ -41,6 +45,10 @@ function stateReducer(state: State, action: Action): State {
       return { ...state, shadeBranchBySupport: !state.shadeBranchBySupport }
     case 'setFontSize':
       return { ...state, fontSize: action.value }
+    case 'setWidth':
+      return { ...state, width: action.value }
+    case 'setHeight':
+      return { ...state, height: action.value }
     default:
       throw new Error('Invalid state operation');
   }
@@ -57,13 +65,15 @@ export default function App(): JSX.Element {
   const [state, dispatch] = useReducer(stateReducer, {
     showCladogram: false,
     showSupportValues: true,
-    shadeBranchBySupport: false,
-    fontSize: 10
+    shadeBranchBySupport: true,
+    fontSize: 11,
+    width: 940,
+    height: 740,
   })
 
   return (
     <div className='container'>
-      {/*
+      
       <h5>GeneModel </h5>
       <GeneModel gene={geneModel} />
 
@@ -71,21 +81,23 @@ export default function App(): JSX.Element {
       <MultipleSequenceAlignment
         msa={msa}
         colWidth={1}
-        rowHeight={12}
+        width={750}
+        rowHeight={.5}
         showRowHeader={true}
-        rowHeaderWidth={550}
+        rowHeaderWidth={150}
         showText={false}
-        palette={'individual'}
+        palette='individual'
       />
 
       <h5>Multiple Sequence Alignment (detailed)</h5>
       <MultipleSequenceAlignment
         msa={msa}
         rowHeight={12}
-        rowHeaderWidth={550}
-        palette={'individual'}
+        rowHeaderWidth={150}
+        height={500}
+        palette='individual'
       />
-      */}
+      
       <h5>Phylogenetic tree</h5>
       <label>
         <input
@@ -121,6 +133,42 @@ export default function App(): JSX.Element {
             type: 'setFontSize',
             value: Number(value)
           })}
+          style={{
+            width: '4em',
+            marginRight: '1em'
+          }}
+        />
+      </label>
+
+      <label>
+        Width
+        <input
+          type='number'
+          value={state.width}
+          onChange={({ target: { value } }) => dispatch({
+            type: 'setWidth',
+            value: Number(value)
+          })}
+          style={{
+            width: '6em',
+            marginRight: '1em'
+          }}
+        />
+      </label>
+
+      <label>
+        Height
+        <input
+          type='number'
+          value={state.height}
+          onChange={({ target: { value } }) => dispatch({
+            type: 'setHeight',
+            value: Number(value)
+          })}
+          style={{
+            width: '6em',
+            marginRight: '1em'
+          }}
         />
       </label>
       <Tree
@@ -129,6 +177,8 @@ export default function App(): JSX.Element {
         showSupportValues={state.showSupportValues}
         shadeBranchBySupport={state.shadeBranchBySupport}
         fontSize={state.fontSize}
+        width={state.width}
+        height={state.height}
       />
     </div>
   )

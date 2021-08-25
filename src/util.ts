@@ -1,11 +1,21 @@
 import randomColor from 'randomcolor'
 
-const AMINO_ACIDS: string[] = [
+export const AMINO_ACIDS = [
   'G', 'A', 'V', 'L', 'I', 'F', 'W', 'M', 'P', 'S', 'T', 'C',
   'Y', 'N', 'Q', 'D', 'E', 'K', 'R', 'H', '-', '?', 'X', '*'
-]
+] as const;
 
-export type ColorMap = Map<string, string>
+export type AminoAcid = typeof AMINO_ACIDS[number];
+
+export const NUCLEOTIDES = [
+  'A', 'C', 'G', 'T', 'N', '-', '?', '.'
+] as const;
+
+export type Nucleotide = typeof NUCLEOTIDES[number];
+
+export type BioLetter = AminoAcid | Nucleotide;
+
+export type ColorMap = Map<BioLetter, string>
 
 const aaColorsPolarity: ColorMap = new Map(
   AMINO_ACIDS.map(aa => {
@@ -47,10 +57,15 @@ const aaIndividualAas: ColorMap = new Map(
   })
 )
 
+export type PaletteName =
+  | 'polarity'
+  | 'individual'
 
-type PaletteMap = Map<string, ColorMap>
+type PaletteMap = Map<PaletteName, ColorMap>
 
 export const aaColors: PaletteMap = new Map([
   ['polarity', aaColorsPolarity],
   ['individual', aaIndividualAas]
 ])
+
+

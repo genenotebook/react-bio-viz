@@ -6,10 +6,10 @@ function TreeBranch({ node, shadeBranchBySupport }: TreeNodeProps) {
   const style = {
     fill: 'none',
     stroke: 'black',
-    strokeWidth: 1,
+    strokeWidth: .75,
     opacity: shadeBranchBySupport
-      ? node.parent.data.name as unknown as number / 100
-      : 1.
+      ? node.parent.data.name as unknown as number
+      : .9
   };
   const d = `M${node.parent.y},${node.parent.x}
     L${node.parent.y},${node.x}
@@ -47,7 +47,7 @@ function InternalNode({ node, fontSize }: TreeNodeProps) {
   const { data, x, y } = node;
   const { name } = data;
   return (
-    <text x={y + 3} y={x + 3} fontSize={fontSize}>
+    <text x={y + 3} y={x + 2} fontSize={fontSize} dominantBaseline='middle'>
       {name}
     </text>
   );
@@ -58,7 +58,7 @@ interface TreeNodeProps {
   showSupportValues?: boolean,
   shadeBranchBySupport?: boolean,
   colorFunction?: CallableFunction,
-  fontSize?: number,
+  fontSize: number,
   alignTips?: boolean
 }
 
@@ -74,7 +74,6 @@ function TreeNode({
       <TipNode
         node={node}
         fontSize={fontSize}
-        showSupportValues={showSupportValues}
         colorFunction={colorFunction}
         alignTips={alignTips}
       />
