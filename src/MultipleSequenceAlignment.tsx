@@ -72,10 +72,6 @@ function RowNames({
         zIndex: 2
       }}
     > 
-      {/*
-      <Row header='Consensus' rowHeight={rowHeight} />
-      <li style={{height:'4px'}}/>
-      */}
       {msa.map(({header}) => (
         <Row key={header} header={header} rowHeight={rowHeight} />
       ))}
