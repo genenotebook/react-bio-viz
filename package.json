@@ -29,7 +29,7 @@
     "@types/d3": "7.1.0",
     "@types/jest": "27.4.0",
     "@types/node": "16.11.22",
-    "@types/lodash": "4.14.176",
+    "@types/lodash": "4.14.178",
     "@types/prop-types": "15.7.4",
     "@types/randomcolor": "0.5.6",
     "@types/react": "17.0.39",
