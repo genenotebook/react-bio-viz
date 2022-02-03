@@ -44,7 +44,7 @@
     "eslint-plugin-react": "7.26.1",
     "konva": "8.3.2",
     "lodash": "4.17.21",
-    "prop-types": "15.7.2",
+    "prop-types": "15.8.1",
     "randomcolor": "0.6.2",
     "react-resize-detector": "6.7.6",
     "react-konva": "16.13.0-6",
