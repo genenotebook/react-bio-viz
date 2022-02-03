@@ -40,7 +40,7 @@
     "clean-webpack-plugin": "4.0.0",
     "color": "4.2.0",
     "d3": "7.3.0",
-    "eslint": "8.1.0",
+    "eslint": "8.8.0",
     "eslint-plugin-react": "7.28.0",
     "konva": "8.3.2",
     "lodash": "4.17.21",
