@@ -1,15 +1,15 @@
-import React from 'react';
-import { cluster, hierarchy } from 'd3';
-import randomColor from 'randomcolor';
+import React from "react";
+import { cluster, hierarchy } from "d3";
+import randomColor from "randomcolor";
 
 function TreeBranch({ node, shadeBranchBySupport }: TreeNodeProps) {
   const style = {
-    fill: 'none',
-    stroke: 'black',
-    strokeWidth: .75,
+    fill: "none",
+    stroke: "black",
+    strokeWidth: 0.75,
     opacity: shadeBranchBySupport
-      ? node.parent.data.name as unknown as number
-      : .9
+      ? (node.parent.data.name as unknown as number)
+      : 0.9,
   };
   const d = `M${node.parent.y},${node.parent.x}
     L${node.parent.y},${node.x}
@@ -18,122 +18,111 @@ function TreeBranch({ node, shadeBranchBySupport }: TreeNodeProps) {
 }
 
 function TipNode({ node, colorFunction, fontSize, alignTips }: TreeNodeProps) {
-  const { data: { name }, x} = node;
-  const textY = alignTips
-    ? node.tipAlignY || (node.y + 10)
-    : node.y + 10;
+  const {
+    data: { name },
+    x,
+  } = node;
+  const textY = alignTips ? node.tipAlignY || node.y + 10 : node.y + 10;
   const nodeY = node.y + 4;
-  const colorSeed = typeof colorFunction !== 'undefined'
-    ? colorFunction(node)
-    : name
+  const colorSeed =
+    typeof colorFunction !== "undefined" ? colorFunction(node) : name;
   const fill = randomColor({ seed: colorSeed });
   const circleStyle = { fill };
   const lineStyle = {
-    stroke: 'darkgrey',
+    stroke: "darkgrey",
     strokeWidth: 1,
-    strokeDasharray: '1,2'
-  }
+    strokeDasharray: "1,2",
+  };
   return (
     <g className="tipnode">
       <title>{name}</title>
-      <line x1={nodeY} x2={textY} y1={x} y2={x} style={lineStyle}/>
-      <circle className="tipnode" cy={x} cx={nodeY} r="4.5" style={circleStyle} />
-      <text x={textY} y={x + 4} fontSize={fontSize}>{name}</text>
+      <line x1={nodeY} x2={textY} y1={x} y2={x} style={lineStyle} />
+      <circle
+        className="tipnode"
+        cy={x}
+        cx={nodeY}
+        r="4.5"
+        style={circleStyle}
+      />
+      <text x={textY} y={x + 4} fontSize={fontSize}>
+        {name}
+      </text>
     </g>
   );
 }
+
+type NodeFn = (arg0: TreeNodeProps) => JSX.Element;
 
 function InternalNode({ node, fontSize }: TreeNodeProps) {
   const { data, x, y } = node;
   const { name } = data;
   return (
-    <text x={y + 3} y={x + 2} fontSize={fontSize} dominantBaseline='middle'>
+    <text x={y + 3} y={x + 2} fontSize={fontSize} dominantBaseline="middle">
       {name}
     </text>
   );
 }
 
 interface TreeNodeProps {
-  node: Node,
-  showSupportValues?: boolean,
-  shadeBranchBySupport?: boolean,
-  colorFunction?: CallableFunction,
-  fontSize: number,
-  alignTips?: boolean
-}
-
-function TreeNode({
-  node,
-  showSupportValues,
-  colorFunction,
-  fontSize,
-  alignTips
-}: TreeNodeProps) {
-  if (typeof node.children === 'undefined') {
-    return (
-      <TipNode
-        node={node}
-        fontSize={fontSize}
-        colorFunction={colorFunction}
-        alignTips={alignTips}
-      />
-    )
-  } else if (showSupportValues) {
-    return (
-      <InternalNode
-        node={node}
-        fontSize={fontSize}
-      />
-    )
-  }
-  return null
+  node: Node;
+  showSupportValues?: boolean;
+  shadeBranchBySupport?: boolean;
+  colorFunction?: CallableFunction;
+  fontSize: number;
+  alignTips?: boolean;
 }
 
 interface Tree {
-  ID?: string | number,
-  name: string,
-  color_regex?: string,
-  length: number,
-  children: Tree[],
+  ID?: string | number;
+  name: string;
+  color_regex?: string;
+  length: number;
+  children: Tree[];
 }
 
 interface Node {
-  children?: Node[],
-  data: Tree,
-  depth: number,
-  height: number,
-  parent: Node,
-  value: number,
-  x: number,
-  y: number,
-  tipAlignY?: number
+  children?: Node[];
+  data: Tree;
+  depth: number;
+  height: number;
+  parent: Node;
+  value: number;
+  x: number;
+  y: number;
+  tipAlignY?: number;
 }
 
 interface TreeProps {
-  tree: Tree,
-  height?: number,
-  width?: number,
-  cladogram?: boolean,
-  showSupportValues?: boolean,
-  shadeBranchBySupport?: boolean,
-  colorFunction?: CallableFunction,
-  fontSize?: number,
-  alignTips?: boolean
+  tree: Tree;
+  height?: number;
+  width?: number;
+  cladogram?: boolean;
+  showSupportValues?: boolean;
+  shadeBranchBySupport?: boolean;
+  colorFunction?: CallableFunction;
+  fontSize?: number;
+  alignTips?: boolean;
+  tipNode?: NodeFn;
+  internalNode?: NodeFn;
 }
 
 function defaultColorFunction(node: Node): string {
-  const { data } =  node;
+  const { data } = node;
   const { name } = data;
-  return name.slice(0,5);
+  return name.slice(0, 5);
 }
 
-function setNodeHeight(node: Node, currentHeight: number, scalingFactor: number): void {
+function setNodeHeight(
+  node: Node,
+  currentHeight: number,
+  scalingFactor: number
+): void {
   node.tipAlignY = node.y;
   node.y = (currentHeight + node.data.length) * scalingFactor;
   if (node.children) {
-    node.children.forEach((childNode) => (
+    node.children.forEach((childNode) =>
       setNodeHeight(childNode, currentHeight + node.data.length, scalingFactor)
-    ))
+    );
   }
 }
 
@@ -146,7 +135,9 @@ export default function Tree({
   shadeBranchBySupport = true,
   colorFunction = defaultColorFunction,
   fontSize = 10,
-  alignTips = true
+  alignTips = true,
+  tipNode = TipNode,
+  internalNode = InternalNode,
 }: TreeProps): JSX.Element {
   const margin = {
     top: 10,
@@ -171,15 +162,17 @@ export default function Tree({
     const scalingFactor = 400;
     setNodeHeight(treeData as Node, initialHeight, scalingFactor);
   }
-  
+
   const nodes = treeData.descendants().filter((node) => node.parent);
 
   return (
-    <div className='tree'>
+    <div className="tree">
       <svg width={width} height={height}>
         <g transform={`translate(${margin.left},${margin.top})`}>
-          {
-            nodes.map((node: any) => (
+          {nodes.map((node: any) => {
+            const TreeNode =
+              typeof node.children === "undefined" ? tipNode : internalNode;
+            return (
               <React.Fragment key={`${node.x}_${node.y}`}>
                 <TreeBranch
                   node={node}
@@ -194,10 +187,10 @@ export default function Tree({
                   alignTips={alignTips}
                 />
               </React.Fragment>
-            ))
-          }
+            );
+          })}
         </g>
       </svg>
     </div>
-  )
+  );
 }
