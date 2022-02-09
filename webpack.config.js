@@ -1,38 +1,33 @@
-const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  mode: 'production',
-  entry: path.resolve(__dirname, 'src', 'index.tsx'),
+  mode: "production",
+  entry: path.resolve(__dirname, "src", "index.tsx"),
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    libraryTarget: 'commonjs2'
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "dist"),
+    libraryTarget: "commonjs2",
   },
-  devtool: 'source-map',
+  devtool: "source-map",
   resolve: {
-    extensions: ['.js', '.ts', '.tsx']
+    extensions: [".js", ".ts", ".tsx"],
   },
   module: {
     rules: [
       {
         test: /\.ts(x?)$/,
         exclude: /node_modules/,
-        use: 'ts-loader'
+        use: "ts-loader",
       },
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       {
-        enforce: 'pre',
+        enforce: "pre",
         test: /\.js$/,
-        loader: 'source-map-loader'
-      }
-    ]
+        loader: "source-map-loader",
+      },
+    ],
   },
-  plugins: [
-    new CleanWebpackPlugin(),
-  ],
-  externals: [
-    'react',
-    'react-dom'
-  ]
-}
+  plugins: [new CleanWebpackPlugin()],
+  externals: ["react", "react-dom"],
+};

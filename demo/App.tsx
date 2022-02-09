@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
 
-import { GeneModel, MultipleSequenceAlignment, Tree } from "../src/index";
+import { GeneModel, MultipleSequenceAlignment, PhyloTree } from "../src/index";
 
 // import gene from './data/genemodel.json'
 // import msa from './data/multiple_sequence_alignment.json'
@@ -175,7 +175,7 @@ export default function App(): JSX.Element {
           }}
         />
       </label>
-      <Tree
+      <PhyloTree
         tree={tree}
         cladogram={state.showCladogram}
         showSupportValues={state.showSupportValues}

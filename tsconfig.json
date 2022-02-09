@@ -7,14 +7,12 @@
     "noImplicitAny": true,
     "module": "commonjs",
     "target": "es6",
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "resolveJsonModule": true
   },
-  "include": [
-    "./src/**/*",
-    "./demo/**/*"
-  ]
+  "include": ["./src/**/*", "./demo/**/*"]
 }

@@ -1,20 +1,24 @@
 import React from "react";
 import { cluster, hierarchy } from "d3";
 import randomColor from "randomcolor";
+import { css } from "@emotion/css";
 
 function TreeBranch({ node, shadeBranchBySupport }: TreeNodeProps) {
-  const style = {
-    fill: "none",
-    stroke: "black",
-    strokeWidth: 0.75,
-    opacity: shadeBranchBySupport
-      ? (node.parent.data.name as unknown as number)
-      : 0.9,
-  };
-  const d = `M${node.parent.y},${node.parent.x}
-    L${node.parent.y},${node.x}
-    L${node.y},${node.x}`;
-  return <path d={d} style={style} />;
+  return (
+    <path
+      d={`M${node.parent.y},${node.parent.x}
+          L${node.parent.y},${node.x}
+          L${node.y},${node.x}`}
+      className={css({
+        fill: "none",
+        stroke: "black",
+        strokeWidth: 0.75,
+        opacity: shadeBranchBySupport
+          ? (node.parent.data.name as unknown as number)
+          : 0.9,
+      })}
+    />
+  );
 }
 
 function TipNode({ node, colorFunction, fontSize, alignTips }: TreeNodeProps) {
@@ -26,23 +30,25 @@ function TipNode({ node, colorFunction, fontSize, alignTips }: TreeNodeProps) {
   const nodeY = node.y + 4;
   const colorSeed =
     typeof colorFunction !== "undefined" ? colorFunction(node) : name;
-  const fill = randomColor({ seed: colorSeed });
-  const circleStyle = { fill };
-  const lineStyle = {
-    stroke: "darkgrey",
-    strokeWidth: 1,
-    strokeDasharray: "1,2",
-  };
   return (
     <g className="tipnode">
       <title>{name}</title>
-      <line x1={nodeY} x2={textY} y1={x} y2={x} style={lineStyle} />
+      <line
+        x1={nodeY}
+        x2={textY}
+        y1={x}
+        y2={x}
+        className={css({
+          stroke: "darkgrey",
+          strokeWidth: 1,
+          strokeDasharray: "1,2",
+        })}
+      />
       <circle
-        className="tipnode"
+        className={css({ fill: randomColor({ seed: colorSeed }) })}
         cy={x}
         cx={nodeY}
         r="4.5"
-        style={circleStyle}
       />
       <text x={textY} y={x + 4} fontSize={fontSize}>
         {name}
@@ -51,7 +57,8 @@ function TipNode({ node, colorFunction, fontSize, alignTips }: TreeNodeProps) {
   );
 }
 
-type NodeFn = (arg0: TreeNodeProps) => JSX.Element;
+export type NodeFn = (arg0: TreeNodeProps) => JSX.Element;
+export type colorFn = (node: Node) => string;
 
 function InternalNode({ node, fontSize }: TreeNodeProps) {
   const { data, x, y } = node;
@@ -63,24 +70,24 @@ function InternalNode({ node, fontSize }: TreeNodeProps) {
   );
 }
 
-interface TreeNodeProps {
+export type TreeNodeProps = {
   node: Node;
   showSupportValues?: boolean;
   shadeBranchBySupport?: boolean;
-  colorFunction?: CallableFunction;
+  colorFunction?: colorFn;
   fontSize: number;
   alignTips?: boolean;
-}
+};
 
-interface Tree {
+export type Tree = {
   ID?: string | number;
   name: string;
   color_regex?: string;
   length: number;
   children: Tree[];
-}
+};
 
-interface Node {
+export type Node = {
   children?: Node[];
   data: Tree;
   depth: number;
@@ -90,21 +97,7 @@ interface Node {
   x: number;
   y: number;
   tipAlignY?: number;
-}
-
-interface TreeProps {
-  tree: Tree;
-  height?: number;
-  width?: number;
-  cladogram?: boolean;
-  showSupportValues?: boolean;
-  shadeBranchBySupport?: boolean;
-  colorFunction?: CallableFunction;
-  fontSize?: number;
-  alignTips?: boolean;
-  tipNode?: NodeFn;
-  internalNode?: NodeFn;
-}
+};
 
 function defaultColorFunction(node: Node): string {
   const { data } = node;
@@ -126,7 +119,7 @@ function setNodeHeight(
   }
 }
 
-export default function Tree({
+export default function PhyloTree({
   tree,
   height = 900,
   width = 1000,
@@ -138,7 +131,19 @@ export default function Tree({
   alignTips = true,
   tipNode = TipNode,
   internalNode = InternalNode,
-}: TreeProps): JSX.Element {
+}: {
+  tree: Tree;
+  height?: number;
+  width?: number;
+  cladogram?: boolean;
+  showSupportValues?: boolean;
+  shadeBranchBySupport?: boolean;
+  colorFunction?: colorFn;
+  fontSize?: number;
+  alignTips?: boolean;
+  tipNode?: NodeFn;
+  internalNode?: NodeFn;
+}): JSX.Element {
   const margin = {
     top: 10,
     bottom: 10,

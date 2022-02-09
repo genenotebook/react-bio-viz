@@ -3,31 +3,33 @@ import { scaleLinear, ScaleLinear } from "d3";
 import randomColor from "randomcolor";
 import Color from "color";
 import { groupBy, Dictionary } from "lodash";
+import { css } from "@emotion/css";
 
-interface ScaleProps {
+const formatNumber = new Intl.NumberFormat().format;
+
+function Scale({
+  scale,
+  numTicks,
+  transform,
+  seqid,
+}: {
   scale: ScaleLinear<number, number, never>;
   numTicks: number;
   transform: string;
   seqid: string;
-}
-
-function Scale({ scale, numTicks, transform, seqid }: ScaleProps): JSX.Element {
-  const formatNumber = new Intl.NumberFormat().format;
-
+}): JSX.Element {
   const range = scale.range();
-
   const [start, end] = scale.domain();
-
   const stepSize = Math.round((end - start) / numTicks);
-
   const ticks = [];
-
   for (let i = 1; i < numTicks; i += 1) {
     ticks.push(start + i * stepSize);
   }
-
   return (
-    <g className="x-axis" transform={transform}>
+    <g
+      className={css({ fontFamily: "helvetica; arial; monospace" })}
+      transform={transform}
+    >
       <line x1={range[0]} x2={range[1]} y1="5" y2="5" stroke="black" />
       <g>
         <line x1={range[0]} x2={range[0]} y1="0" y2="5" stroke="black" />
@@ -59,36 +61,89 @@ function Scale({ scale, numTicks, transform, seqid }: ScaleProps): JSX.Element {
   );
 }
 
-export interface SequenceInterval {
+/**
+ * Sequence interval object based on gff3 field specs. Recursively defined:
+ * SequenceInterval children are SequenceIntervals themselves.
+ */
+export type SequenceInterval = {
+  /**
+   * Unique identifier for the sequence interval
+   */
   ID: string;
+  /**
+   * Unique identifier of the sequence the interval belongs to
+   */
   seqid: string;
+  /**
+   * Source of the sequence interval, i.e. what tool was used to generate
+   * or which organisation provided the annotation
+   */
   source: string;
+  /**
+   * Type of interval following the sequence ontology, e.g. mRNA, CDS, or gene
+   */
   interval_type: string;
+  /**
+   * Start coordinate
+   */
   start: number;
+  /**
+   * End coordinate
+   */
   end: number;
+  /**
+   * Sequence interval confidence score
+   */
   score: number | string;
-  strand: string;
-  phase: number | string;
-  attributes: Record<string, Array<string> | string>;
-}
-
-export interface Gene extends SequenceInterval {
-  children: SequenceInterval[];
-}
+  /**
+   * Sequence strand
+   */
+  strand: "+" | "-" | ".";
+  /**
+   * Interval phase (only relevant for CDS features)
+   */
+  phase: 0 | 1 | 2 | ".";
+  /**
+   * Additional attributes (AKA gff3 column 9)
+   * @example
+   * ```json
+   * {dbxref: ['InterPro:IPR002376','InterPro:IPR001555'], name:'PurN'}
+   * ```
+   */
+  attributes: Record<string, string[] | string>;
+  /**
+   * Child sequence intervals of the current sequence interval. This makes
+   * that genemodels can be represented as a Directed Acyclic Graph. A common
+   * representation is `gene` -> `mRNA(s)` -> `exon(s)`
+   */
+  children?: SequenceInterval[];
+};
 
 type ReactChildren = JSX.Element[] | JSX.Element;
 
-interface SequenceIntervalProps {
-  interval: SequenceInterval;
-  colorSeed: string;
-  scale: ScaleLinear<number, number>;
-}
-
+/**
+ *
+ * @param options {SequenceIntervalProps} Sequence Interval props
+ * @returns SVG rect for sequence interval
+ */
 function SequenceInterval({
   interval,
   colorSeed,
   scale,
-}: SequenceIntervalProps) {
+}: {
+  /**
+   * Sequence interval object
+   */
+  interval: SequenceInterval;
+  /**
+   * Seed string used to determine SVG rect fill
+   */
+  colorSeed: string;
+  /**
+   * D3 scale transforming genome coordinates to plot coordinates
+   */
+  scale: ScaleLinear<number, number>;
+}) {
   const { start, end, interval_type } = interval;
 
   const baseColor = new Color(randomColor({ seed: colorSeed }));
@@ -105,21 +160,28 @@ function SequenceInterval({
       y={-height / 2}
       height={height}
       fill={fill.toString()}
-      style={{
+      className={css({
         cursor: "pointer",
-      }}
+        "&:hover": {
+          strokeWidth: "2px",
+          stroke: "hsl(204, 86%, 53%)", //Bulma info color
+        },
+      })}
     />
   );
 }
 
-interface TranscriptProps {
+function Transcript({
+  transcript,
+  scale,
+  index,
+  children,
+}: {
   transcript: SequenceInterval;
   children: ReactChildren;
   scale: ScaleLinear<number, number>;
   index: number;
-}
-
-function Transcript({ transcript, scale, index, children }: TranscriptProps) {
+}) {
   const { start, end } = transcript;
   return (
     <g className="transcript" transform={`translate(0,${index * 14})`}>
@@ -136,31 +198,29 @@ function Transcript({ transcript, scale, index, children }: TranscriptProps) {
   );
 }
 
-interface GeneModelGroupProps {
-  gene: Gene;
+function GeneModelGroup({
+  gene,
+  children,
+  scale,
+}: {
+  gene: SequenceInterval;
   children: ReactChildren;
   scale: ScaleLinear<number, number>;
-}
-
-function GeneModelGroup({ gene, children, scale }: GeneModelGroupProps) {
+}) {
   return (
     <g className="genemodel" transform="translate(0,4)">
-      {React.Children.map(children, (child) =>
-        React.cloneElement(child, { gene, scale })
-      )}
+      {React.Children.map(children, (child) => React.cloneElement(child))}
     </g>
   );
-}
-
-interface getTranscriptChildrenOptions {
-  transcript: SequenceInterval;
-  intervals: Dictionary<SequenceInterval[]>;
 }
 
 function getTranscriptChildren({
   transcript,
   intervals,
-}: getTranscriptChildrenOptions): SequenceInterval[] {
+}: {
+  transcript: SequenceInterval;
+  intervals: Dictionary<SequenceInterval[]>;
+}): SequenceInterval[] {
   const children: SequenceInterval[] = [];
   for (const _intervals of Object.values(intervals)) {
     for (const interval of _intervals) {
@@ -173,27 +233,52 @@ function getTranscriptChildren({
   return children.filter((c) => c.interval_type !== "mRNA");
 }
 
-interface GeneModelProps {
-  gene: Gene;
-  width?: number;
-  colorSeed?: string;
-  showScale?: boolean;
-}
-
+/**
+ * GeneModel component
+ * @example A minimal setting:
+ *
+ * ```typescript
+ * import { GeneModel } from 'react-bio-viz';
+ * <GeneModel gene={gene} />
+ * ```
+ *
+ * @example Dynamically observing resize events using `react-resize-detector`:
+ *
+ * ```typescript
+ * import { GeneModel } from 'react-bio-viz';
+ * import ReactResizeDetector from 'react-resize-detector';
+ * <ReactResizeDetector handleWidth>
+ *  ({width}) => (
+ *    <GeneModel gene={gene} width={wdith} />
+ *  )
+ * </ReactResizeDetector>
+ * ```
+ * @param options
+ * @param options.gene SequenceInterval object of the gene
+ * @param options.width Width of the rendered SVG element (default = 500)
+ * @param options.colorSeed String to be used as seed for random color generation
+ * (default = "42")
+ * @param options.showScale Show a scalebar indicating genomic position
+ * (default = true)
+ */
 export default function GeneModel({
   gene,
   width = 500,
   colorSeed = "42",
   showScale = true,
-}: GeneModelProps): JSX.Element {
+}: {
+  gene: SequenceInterval;
+  width?: number;
+  colorSeed?: string;
+  showScale?: boolean;
+}): JSX.Element {
   const geneLength = gene.end - gene.start;
   const padding = Math.round(0.1 * geneLength);
   const start = Math.max(0, gene.start - padding);
   const end = gene.end + padding;
   const intervals = groupBy(gene.children, (interval) => interval.ID);
-  const transcripts = gene.children.filter(
-    (child) => child.interval_type === "mRNA"
-  );
+  const transcripts =
+    gene.children?.filter((child) => child.interval_type === "mRNA") || [];
   const height = 14 * transcripts.length + 46;
   const margin = {
     top: 10,

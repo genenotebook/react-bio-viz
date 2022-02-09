@@ -1,5 +1,24 @@
-import GeneModel from './GeneModel'
-import MultipleSequenceAlignment from './MultipleSequenceAlignment'
-import Tree from './Tree'
+import GeneModel, { SequenceInterval } from "./GeneModel";
+import MultipleSequenceAlignment, {
+  Sequence,
+} from "./MultipleSequenceAlignment";
+import PhyloTree, {
+  Tree,
+  NodeFn,
+  colorFn,
+  Node,
+  TreeNodeProps,
+} from "./PhyloTree";
 
-export { GeneModel, MultipleSequenceAlignment, Tree }
+export {
+  GeneModel,
+  SequenceInterval,
+  MultipleSequenceAlignment,
+  Sequence,
+  PhyloTree,
+  Tree,
+  NodeFn,
+  colorFn,
+  Node,
+  TreeNodeProps,
+};
