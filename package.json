@@ -25,8 +25,8 @@
     "/dist"
   ],
   "devDependencies": {
-    "@emotion/css": "^11.7.1",
-    "@emotion/react": "^11.7.1",
+    "@emotion/css": "11.9.0",
+    "@emotion/react": "11.9.3",
     "@types/color": "3.0.3",
     "@types/d3": "7.1.0",
     "@types/jest": "27.4.0",
