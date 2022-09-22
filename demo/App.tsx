@@ -17,6 +17,8 @@ type State = {
   fontSize?: number;
   width?: number;
   height?: number;
+  panMin: number;
+  panMax: number;
 };
 
 type Action =
@@ -25,7 +27,12 @@ type Action =
   | { type: "toggleShadeBranchBySupport" }
   | { type: "setFontSize"; value: number }
   | { type: "setWidth"; value: number }
-  | { type: "setHeight"; value: number };
+  | { type: "setHeight"; value: number }
+  | { type: 'panLeft' } 
+  | { type: 'panRight' }
+  | { type: 'zoomIn' }
+  | { type: 'zoomOut' }
+  | { type: 'panZoomReset' }
 
 function stateReducer(state: State, action: Action): State {
   switch (action.type) {
@@ -41,6 +48,16 @@ function stateReducer(state: State, action: Action): State {
       return { ...state, width: action.value };
     case "setHeight":
       return { ...state, height: action.value };
+    case 'panLeft':
+      return { ...state, panMin: state.panMin - 10, panMax: state.panMax - 10 };
+    case 'panRight':
+      return { ...state, panMin: state.panMin + 10, panMax: state.panMax + 10 };
+    case 'zoomIn':
+      return { ...state, panMin: state.panMin + 10, panMax: state.panMax - 10 };
+    case 'zoomOut':
+      return { ...state, panMin: state.panMin - 10, panMax: state.panMax + 10 };
+    case 'panZoomReset':
+      return { ...state, panMin: 0, panMax: 100 };
     default:
       throw new Error("Invalid state operation");
   }
@@ -57,6 +74,8 @@ export default function App(): JSX.Element {
     fontSize: 11,
     width: 940,
     height: 740,
+    panMin: 0,
+    panMax: 100,
   });
 
   return (
@@ -64,7 +83,47 @@ export default function App(): JSX.Element {
       <hr/>
       <section className='section'>
         <h1 className='title'>GeneModel </h1>
-        <GeneModel gene={geneModel} />
+        <div
+          className='buttons has-addons'
+          style={{ display: 'inline-block', marginRight: '1em' }}
+        >
+          <button
+            className='button is-small'
+            onClick={()=>dispatch({type:'panLeft'})}
+            disabled={state.panMin <= 0}
+          >
+            &larr;
+          </button>
+          <button
+            className='button is-small'
+            onClick={()=>dispatch({type:'panRight'})}
+            disabled={state.panMax >= 100}
+          >
+            &rarr;
+          </button>
+        </div>
+        <div
+          className='buttons has-addons'
+          style={{ display: 'inline-block', marginRight: '1em' }}
+        >
+          <button
+            className='button is-small'
+            onClick={()=>dispatch({type:'zoomOut'})}
+            disabled={state.panMin <= 0 && state.panMax >= 100}
+          >-</button>
+          <button
+            className='button is-small'
+            onClick={()=>dispatch({type:'zoomIn'})}
+          >+</button>
+        </div>
+        <button
+          className='button is-small'
+          onClick={() => dispatch({ type:'panZoomReset' })}
+          disabled={!(state.panMin !== 0 || state.panMax !== 100)}
+        >
+          Reset
+        </button>
+        <GeneModel gene={geneModel} panMin={state.panMin} panMax={state.panMax}/>
       </section>
       
       <hr/>

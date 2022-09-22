@@ -227,12 +227,15 @@ function getTranscriptChildren({
   for (const _intervals of Object.values(intervals)) {
     for (const interval of _intervals) {
       const intervalParents = interval.attributes.parent || [];
-      if (intervalParents.indexOf(transcript.ID) >= 0) {
+      if (
+        intervalParents.indexOf(transcript.ID) >= 0
+        && interval.interval_type !== 'mRNA'
+      ) {
         children.push(interval);
       }
     }
   }
-  return children.filter((c) => c.interval_type !== "mRNA");
+  return children
 }
 
 function defaultPopoverFn(exon: SequenceInterval): JSX.Element {
@@ -315,18 +318,24 @@ export default function GeneModel({
   width = 500,
   colorSeed = "42",
   showScale = true,
-  exonPopoverFn = defaultPopoverFn
+  exonPopoverFn = defaultPopoverFn,
+  panMin = 0,
+  panMax = 100,
 }: {
   gene: SequenceInterval;
   width?: number;
   colorSeed?: string;
   showScale?: boolean;
-  exonPopoverFn?: (arg0: SequenceInterval) => JSX.Element
+  exonPopoverFn?: (arg0: SequenceInterval) => JSX.Element,
+  panMin?: number,
+  panMax?: number,
 }): JSX.Element {
+  const _panMin = Math.min(Math.max(0, panMin), 100) / 100;
+  const _panMax = 1 - (Math.max(Math.min(100, panMax), 0) / 100);
   const geneLength = gene.end - gene.start;
   const padding = Math.round(0.1 * geneLength);
-  const start = Math.max(0, gene.start - padding);
-  const end = gene.end + padding;
+  const start = Math.max(0, gene.start - padding) + (_panMin * geneLength);
+  const end = gene.end + padding - (_panMax * geneLength);
   const intervals = groupBy(gene.children, (interval) => interval.ID);
   const transcripts =
     gene.children?.filter((child) => child.interval_type === "mRNA") || [];
