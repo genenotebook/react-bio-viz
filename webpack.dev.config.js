@@ -1,8 +1,7 @@
 const path = require("path");
-const config = require("./webpack.config.js");
-const StaticSiteGeneratorPlugin = require("static-site-generator-webpack-plugin");
+const baseConfig = require("./webpack.config.js");
 
-const developmentOptions = {
+module.exports = Object.assign(baseConfig, {
   entry: {
     main: path.resolve(__dirname, "demo/index.tsx"),
   },
@@ -23,6 +22,4 @@ const developmentOptions = {
       publicPath: "/dist/",
     },
   },
-};
-
-module.exports = Object.assign(config, developmentOptions);
+});

@@ -50,7 +50,7 @@ function TipNode({ node, colorFunction, fontSize, alignTips }: TreeNodeProps) {
         cx={nodeY}
         r="4.5"
       />
-      <text x={textY} y={x + 4} fontSize={fontSize}>
+      <text x={textY} y={x + 4} className={css({fontFamily: 'sans-serif', fontSize })}>
         {name}
       </text>
     </g>
@@ -60,11 +60,12 @@ function TipNode({ node, colorFunction, fontSize, alignTips }: TreeNodeProps) {
 export type NodeFn = (arg0: TreeNodeProps) => JSX.Element;
 export type colorFn = (node: Node) => string;
 
-function InternalNode({ node, fontSize }: TreeNodeProps) {
+function InternalNode({ node, fontSize, showSupportValues }: TreeNodeProps) {
+  if (!showSupportValues) return <></>
   const { data, x, y } = node;
   const { name } = data;
   return (
-    <text x={y + 3} y={x + 2} fontSize={fontSize} dominantBaseline="middle">
+    <text x={y + 3} y={x + 2} dominantBaseline="middle" className={css({fontSize, fontFamily: 'sans-serif'})}>
       {name}
     </text>
   );

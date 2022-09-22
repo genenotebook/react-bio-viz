@@ -9,6 +9,7 @@ import PhyloTree, {
   Node,
   TreeNodeProps,
 } from "./PhyloTree";
+require('./stylesheet.scss');
 
 export {
   GeneModel,

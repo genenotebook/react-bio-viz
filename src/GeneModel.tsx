@@ -1,9 +1,20 @@
-import React from "react";
+import React from 'react';
 import { scaleLinear, ScaleLinear } from "d3";
 import randomColor from "randomcolor";
 import Color from "color";
 import { groupBy, Dictionary } from "lodash";
 import { css } from "@emotion/css";
+
+import { Popover, PopoverTrigger, PopoverBody } from './popover'
+
+const HOVER_CSS_CLASS = css({
+  cursor: "pointer",
+  strokeWidth: '1.5px',
+  "&:hover": {
+    strokeWidth: "3px",
+    stroke: "hsl(204, 86%, 53%)", //Bulma info color
+  },
+});
 
 const formatNumber = new Intl.NumberFormat().format;
 
@@ -126,10 +137,11 @@ type ReactChildren = JSX.Element[] | JSX.Element;
  * @param options {SequenceIntervalProps} Sequence Interval props
  * @returns SVG rect for sequence interval
  */
-function SequenceInterval({
+function Exon({
   interval,
   colorSeed,
   scale,
+  exonPopoverFn
 }: {
   /**
    * Sequence interval object
@@ -143,8 +155,12 @@ function SequenceInterval({
    * D3 scale transforming genome coordinates to plot coordinates
    */
   scale: ScaleLinear<number, number>;
+  /**
+   * 
+   */
+  exonPopoverFn: (arg0: SequenceInterval) => JSX.Element
 }) {
-  const { start, end, interval_type } = interval;
+  const { start, end, interval_type, ID } = interval;
 
   const baseColor = new Color(randomColor({ seed: colorSeed }));
   const contrastColor = baseColor.isLight()
@@ -154,20 +170,21 @@ function SequenceInterval({
   const fill = interval_type === "CDS" ? baseColor : contrastColor;
   const height = interval_type === "CDS" ? 10 : 4;
   return (
-    <rect
-      x={scale(start)}
-      width={scale(end) - scale(start)}
-      y={-height / 2}
-      height={height}
-      fill={fill.toString()}
-      className={css({
-        cursor: "pointer",
-        "&:hover": {
-          strokeWidth: "2px",
-          stroke: "hsl(204, 86%, 53%)", //Bulma info color
-        },
-      })}
-    />
+    <Popover>
+      <PopoverTrigger>
+        <rect
+          x={scale(start)}
+          width={scale(end) - scale(start)}
+          y={-height / 2}
+          height={height}
+          fill={fill.toString()}
+          className={HOVER_CSS_CLASS}
+        />
+      </PopoverTrigger>
+      <PopoverBody header={ID}>
+        { exonPopoverFn(interval) }
+      </PopoverBody>
+    </Popover>
   );
 }
 
@@ -181,7 +198,7 @@ function Transcript({
   children: ReactChildren;
   scale: ScaleLinear<number, number>;
   index: number;
-}) {
+}): JSX.Element {
   const { start, end } = transcript;
   return (
     <g className="transcript" transform={`translate(0,${index * 14})`}>
@@ -192,24 +209,9 @@ function Transcript({
         y2={0}
         stroke="black"
         markerEnd="url(#arrowEnd)"
+        className={HOVER_CSS_CLASS}
       />
       {children}
-    </g>
-  );
-}
-
-function GeneModelGroup({
-  gene,
-  children,
-  scale,
-}: {
-  gene: SequenceInterval;
-  children: ReactChildren;
-  scale: ScaleLinear<number, number>;
-}) {
-  return (
-    <g className="genemodel" transform="translate(0,4)">
-      {React.Children.map(children, (child) => React.cloneElement(child))}
     </g>
   );
 }
@@ -231,6 +233,53 @@ function getTranscriptChildren({
     }
   }
   return children.filter((c) => c.interval_type !== "mRNA");
+}
+
+function defaultPopoverFn(exon: SequenceInterval): JSX.Element {
+  return <ul>
+    <li>
+      ID: {exon.ID}
+    </li>
+    <li>
+      Source: {exon.source}
+    </li>
+    <li>
+      Coordinates: {exon.seqid}:{exon.start}..{exon.end}
+    </li>
+    <li>
+      Strand: {exon.strand}
+    </li>
+    <li>
+      Score: {exon.score}
+    </li>
+    <li>
+      Type: {exon.interval_type}
+    </li>
+    {
+      Object
+      .entries(exon.attributes)
+      .map(([attributeName, attributeValues]) => {
+        if (Array.isArray(attributeValues) && attributeValues.length > 1){
+          return (
+            <li>{attributeName}:
+              <ul>
+                {
+                  attributeValues.map(attributeValue => (
+                    <li>{attributeValue}</li>
+                  ))
+                }
+              </ul>
+            </li>
+          )
+        } else {
+          return <li>
+            {attributeName}: {attributeValues}
+          </li>
+        }
+       
+      })
+    }
+  </ul>
 }
 
 /**
@@ -266,11 +315,13 @@ export default function GeneModel({
   width = 500,
   colorSeed = "42",
   showScale = true,
+  exonPopoverFn = defaultPopoverFn
 }: {
   gene: SequenceInterval;
   width?: number;
   colorSeed?: string;
   showScale?: boolean;
+  exonPopoverFn?: (arg0: SequenceInterval) => JSX.Element
 }): JSX.Element {
   const geneLength = gene.end - gene.start;
   const padding = Math.round(0.1 * geneLength);
@@ -294,7 +345,7 @@ export default function GeneModel({
   return (
     <div className="genemodel">
       <svg height={height} width={width}>
-        <GeneModelGroup gene={gene} scale={scale}>
+        <g className="genemodel" transform="translate(0,8)">
           {transcripts.map((transcript: SequenceInterval, index) => {
             const transcriptChildren = getTranscriptChildren({
               transcript,
@@ -313,17 +364,18 @@ export default function GeneModel({
                     interval.interval_type === "CDS" ? 1 : 0
                   )
                   .map((interval: SequenceInterval) => (
-                    <SequenceInterval
+                    <Exon
                       scale={scale}
                       key={interval.ID}
                       interval={interval}
                       colorSeed={colorSeed}
+                      exonPopoverFn={exonPopoverFn}
                     />
                   ))}
               </Transcript>
             );
           })}
-        </GeneModelGroup>
+        </g> {/* End genemodelgroup */}
         {showScale && (
           <Scale
             scale={scale}
@@ -340,6 +392,7 @@ export default function GeneModel({
             refX="0"
             refY="5"
             orient="auto"
+            markerUnits="userSpaceOnUse"
           >
             <path
               d="M0,5 L15,5 L10,10 M10,0 L15,5"

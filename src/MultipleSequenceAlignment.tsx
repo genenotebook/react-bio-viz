@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { aaColors, ColorMap, PaletteName, BioLetter } from "./util";
 import { css } from "@emotion/css";
 
@@ -50,6 +50,7 @@ function RowNames({
               display: "inline-block",
               zIndex: 2,
               paddingRight: ".25em",
+              fontWeight: header === 'Consensus' ? 800 : 500
             })}
           >
             {header}

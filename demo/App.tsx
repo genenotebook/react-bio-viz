@@ -1,16 +1,8 @@
-import React, { useReducer } from "react";
+import { useReducer } from "react";
 
-import { GeneModel, MultipleSequenceAlignment, PhyloTree } from "../src/index";
+import { GeneModel, MultipleSequenceAlignment, PhyloTree, Tree, SequenceInterval, Sequence } from "../src/index";
 
-// import gene from './data/genemodel.json'
-// import msa from './data/multiple_sequence_alignment.json'
-// import msa from './data/msa.json'
-// import msa from './data/taq_pol_nr_blast.msa.json'
-// import msa from './data/plt1_test.msa.json'
-// import tree from './data/tree.json'
-// import tree from './data/test.fixed_names.tree.json'
-
-function loadJson(filename: string): any {
+function loadJson(filename: string): Tree & SequenceInterval & Sequence[] {
   const request = new XMLHttpRequest();
   request.overrideMimeType("application/json");
   request.open("GET", filename, false);
@@ -54,13 +46,10 @@ function stateReducer(state: State, action: Action): State {
   }
 }
 
-declare const msa: any;
-declare const tree: any;
-
 export default function App(): JSX.Element {
-  const tree = loadJson("./data/tree.json");
-  const msa = loadJson("./data/msa.json");
-  const geneModel = loadJson("./data/genemodel.json");
+  const tree: Tree = loadJson("./data/tree.json");
+  const msa: Sequence[] = loadJson("./data/msa.json");
+  const geneModel: SequenceInterval = loadJson("./data/genemodel.json");
   const [state, dispatch] = useReducer(stateReducer, {
     showCladogram: false,
     showSupportValues: true,
@@ -72,118 +61,131 @@ export default function App(): JSX.Element {
 
   return (
     <div className="container">
-      <h5>GeneModel </h5>
-      <GeneModel gene={geneModel} />
+      <hr/>
+      <section className='section'>
+        <h1 className='title'>GeneModel </h1>
+        <GeneModel gene={geneModel} />
+      </section>
+      
+      <hr/>
 
-      <h5>Multiple Sequence Alignment (overview)</h5>
-      <MultipleSequenceAlignment
-        msa={msa}
-        colWidth={1}
-        width={750}
-        rowHeight={0.5}
-        showRowHeader={true}
-        rowHeaderWidth={150}
-        showText={false}
-        palette="individual"
-      />
+      <section className='section'>
+        <h1 className='title'>Multiple Sequence Alignment</h1>
+        <h2 className='subtitle'>Overview</h2>
+        <MultipleSequenceAlignment
+          msa={msa}
+          colWidth={1}
+          width={750}
+          rowHeight={0.5}
+          showRowHeader={true}
+          rowHeaderWidth={150}
+          showText={false}
+          palette="individual"
+        />
+  
+        <h2 className='subtitle'>Detail</h2>
+        <MultipleSequenceAlignment
+          msa={msa}
+          rowHeight={12}
+          rowHeaderWidth={150}
+          height={500}
+          palette="individual"
+        />
+      </section>
 
-      <h5>Multiple Sequence Alignment (detailed)</h5>
-      <MultipleSequenceAlignment
-        msa={msa}
-        rowHeight={12}
-        rowHeaderWidth={150}
-        height={500}
-        palette="individual"
-      />
+      <hr/>
 
-      <h5>Phylogenetic tree</h5>
-      <label>
-        <input
-          type="checkbox"
-          checked={state.showCladogram}
-          onChange={() => dispatch({ type: "toggleShowCladogram" })}
-        />
-        Cladogram
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          checked={state.showSupportValues}
-          onChange={() => dispatch({ type: "toggleShowSupportValues" })}
-        />
-        Show support values
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          checked={state.shadeBranchBySupport}
-          onChange={() => dispatch({ type: "toggleShadeBranchBySupport" })}
-        />
-        Shade branches by support values
-      </label>
-      <br />
-      <label>
-        Font size
-        <input
-          type="number"
-          value={state.fontSize}
-          onChange={({ target: { value } }) =>
-            dispatch({
-              type: "setFontSize",
-              value: Number(value),
-            })
-          }
-          style={{
-            width: "4em",
-            marginRight: "1em",
-          }}
-        />
-      </label>
+      <section className='section'>
+      <h1 className='title'>Phylogenetic tree</h1>
+        <label>
+          <input
+            type="checkbox"
+            checked={state.showCladogram}
+            onChange={() => dispatch({ type: "toggleShowCladogram" })}
+          />
+          Cladogram
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={state.showSupportValues}
+            onChange={() => dispatch({ type: "toggleShowSupportValues" })}
+          />
+          Show support values
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={state.shadeBranchBySupport}
+            onChange={() => dispatch({ type: "toggleShadeBranchBySupport" })}
+          />
+          Shade branches by support values
+        </label>
+        <br />
+        <label>
+          Font size
+          <input
+            type="number"
+            value={state.fontSize}
+            onChange={({ target: { value } }) =>
+              dispatch({
+                type: "setFontSize",
+                value: Number(value),
+              })
+            }
+            style={{
+              width: "4em",
+              marginRight: "1em",
+            }}
+          />
+        </label>
 
-      <label>
-        Width
-        <input
-          type="number"
-          value={state.width}
-          onChange={({ target: { value } }) =>
-            dispatch({
-              type: "setWidth",
-              value: Number(value),
-            })
-          }
-          style={{
-            width: "6em",
-            marginRight: "1em",
-          }}
-        />
-      </label>
+        <label>
+          Width
+          <input
+            type="number"
+            value={state.width}
+            onChange={({ target: { value } }) =>
+              dispatch({
+                type: "setWidth",
+                value: Number(value),
+              })
+            }
+            style={{
+              width: "6em",
+              marginRight: "1em",
+            }}
+          />
+        </label>
 
-      <label>
-        Height
-        <input
-          type="number"
-          value={state.height}
-          onChange={({ target: { value } }) =>
-            dispatch({
-              type: "setHeight",
-              value: Number(value),
-            })
-          }
-          style={{
-            width: "6em",
-            marginRight: "1em",
-          }}
+        <label>
+          Height
+          <input
+            type="number"
+            value={state.height}
+            onChange={({ target: { value } }) =>
+              dispatch({
+                type: "setHeight",
+                value: Number(value),
+              })
+            }
+            style={{
+              width: "6em",
+              marginRight: "1em",
+            }}
+          />
+        </label>
+        <PhyloTree
+          tree={tree}
+          cladogram={state.showCladogram}
+          showSupportValues={state.showSupportValues}
+          shadeBranchBySupport={state.shadeBranchBySupport}
+          fontSize={state.fontSize}
+          width={state.width}
+          height={state.height}
         />
-      </label>
-      <PhyloTree
-        tree={tree}
-        cladogram={state.showCladogram}
-        showSupportValues={state.showSupportValues}
-        shadeBranchBySupport={state.shadeBranchBySupport}
-        fontSize={state.fontSize}
-        width={state.width}
-        height={state.height}
-      />
+      </section>
+      <hr/>
     </div>
   );
 }

@@ -24,42 +24,75 @@
   "files": [
     "/dist"
   ],
+  "eslintConfig": {
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "prettier"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended"
+    ],
+    "rules": {
+      "no-console": 2,
+      "react/jsx-uses-vars": 1,
+      "react/react-in-jsx-scope": "off",
+      "prettier/prettier": "error"
+    },
+    "requireConfigFile": false
+  },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true
+  },
   "devDependencies": {
-    "@emotion/css": "^11.7.1",
+    "@types/node": "^18.7.18",
+    "@typescript-eslint/eslint-plugin": "5.10.2",
+    "@typescript-eslint/parser": "5.10.2",
+    "bulma": "^0.9.4",
+    "clean-webpack-plugin": "4.0.0",
+    "css-loader": "^6.7.1",
+    "eslint": "8.8.0",
+    "eslint-plugin-react": "7.28.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "node-sass": "^7.0.3",
+    "sass-loader": "^13.0.2",
+    "source-map-loader": "3.0.1",
+    "static-site-generator-webpack-plugin": "^3.3.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "9.4.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.3",
+    "webpack": "^5.71.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "4.8.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@emotion/css": "^11.10.0",
     "@emotion/react": "^11.7.1",
     "@types/color": "3.0.3",
     "@types/d3": "7.1.0",
     "@types/jest": "27.4.0",
     "@types/lodash": "4.14.178",
-    "@types/node": "16.11.22",
     "@types/prop-types": "15.7.4",
     "@types/randomcolor": "0.5.6",
-    "@types/react": "17.0.39",
-    "@types/react-dom": "17.0.11",
-    "@typescript-eslint/eslint-plugin": "5.10.2",
-    "@typescript-eslint/parser": "5.10.2",
-    "clean-webpack-plugin": "4.0.0",
+    "@types/react": "18.0.0",
+    "@types/react-dom": "18.0.0",
     "color": "4.2.0",
     "d3": "7.3.0",
-    "eslint": "8.8.0",
-    "eslint-plugin-react": "7.28.0",
     "lodash": "4.17.21",
     "prop-types": "15.8.1",
     "randomcolor": "0.6.2",
-    "source-map-loader": "3.0.1",
-    "static-site-generator-webpack-plugin": "3.4.2",
-    "ts-loader": "9.2.6",
-    "typescript": "4.5.5",
-    "webpack": "5.68.0",
-    "webpack-cli": "4.9.2",
-    "webpack-dev-server": "4.7.4"
-  },
-  "peerDependencies": {
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0"
-  },
-  "dependencies": {
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0"
+    "react-popper": "^2.3.0"
   }
 }
