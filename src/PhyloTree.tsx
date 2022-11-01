@@ -21,15 +21,31 @@ function TreeBranch({ node, shadeBranchBySupport }: TreeNodeProps) {
   );
 }
 
-function TipNode({ node, colorFunction, fontSize, alignTips }: TreeNodeProps) {
+function defaultLeafText({ node, fontSize = 11 }: {node:Node, fontSize?: Number}): JSX.Element {
+  const {
+    data: { name },
+    x,
+  } = node;
+  return (
+    <text x={0} y={0} className={css({fontFamily: 'sans-serif', fontSize: `${fontSize}` })}>
+      {name}
+    </text>
+  )
+}
+
+function LeafNode({ node, colorFunction, leafTextComponent, fontSize, alignTips }: TreeNodeProps) {
   const {
     data: { name },
     x,
   } = node;
   const textY = alignTips ? node.tipAlignY || node.y + 10 : node.y + 10;
   const nodeY = node.y + 4;
-  const colorSeed =
-    typeof colorFunction !== "undefined" ? colorFunction(node) : name;
+  const colorSeed = typeof colorFunction !== "undefined"
+    ? colorFunction(node)
+    : name;
+  const LeafTextComponent = typeof leafTextComponent === 'undefined'
+    ? defaultLeafText
+    : leafTextComponent;
   return (
     <g className="tipnode">
       <title>{name}</title>
@@ -50,15 +66,12 @@ function TipNode({ node, colorFunction, fontSize, alignTips }: TreeNodeProps) {
         cx={nodeY}
         r="4.5"
       />
-      <text x={textY} y={x + 4} className={css({fontFamily: 'sans-serif', fontSize })}>
-        {name}
-      </text>
+      <g transform={`translate(${textY},${x+4})`}>
+        <LeafTextComponent node={node} />
+      </g>
     </g>
   );
 }
-
-export type NodeFn = (arg0: TreeNodeProps) => JSX.Element;
-export type colorFn = (node: Node) => string;
 
 function InternalNode({ node, fontSize, showSupportValues }: TreeNodeProps) {
   if (!showSupportValues) return <></>
@@ -76,6 +89,7 @@ export type TreeNodeProps = {
   showSupportValues?: boolean;
   shadeBranchBySupport?: boolean;
   colorFunction?: colorFn;
+  leafTextComponent?: LeafFn;
   fontSize: number;
   alignTips?: boolean;
 };
@@ -103,7 +117,7 @@ export type Node = {
 function defaultColorFunction(node: Node): string {
   const { data } = node;
   const { name } = data;
-  return name.slice(0, 5);
+  return name.split(' ').slice(0, -1).join();
 }
 
 function setNodeHeight(
@@ -120,6 +134,9 @@ function setNodeHeight(
   }
 }
 
+export type LeafFn = (arg0:{node: Node, fontFamily?: Number}) => JSX.Element;
+export type colorFn = (node: Node) => string;
+
 export default function PhyloTree({
   tree,
   height = 900,
@@ -130,8 +147,7 @@ export default function PhyloTree({
   colorFunction = defaultColorFunction,
   fontSize = 10,
   alignTips = true,
-  tipNode = TipNode,
-  internalNode = InternalNode,
+  leafTextComponent = defaultLeafText,
 }: {
   tree: Tree;
   height?: number;
@@ -142,8 +158,7 @@ export default function PhyloTree({
   colorFunction?: colorFn;
   fontSize?: number;
   alignTips?: boolean;
-  tipNode?: NodeFn;
-  internalNode?: NodeFn;
+  leafTextComponent?: LeafFn;
 }): JSX.Element {
   const margin = {
     top: 10,
@@ -177,7 +192,7 @@ export default function PhyloTree({
         <g transform={`translate(${margin.left},${margin.top})`}>
           {nodes.map((node: any) => {
             const TreeNode =
-              typeof node.children === "undefined" ? tipNode : internalNode;
+              typeof node.children === "undefined" ? LeafNode : InternalNode;
             return (
               <React.Fragment key={`${node.x}_${node.y}`}>
                 <TreeBranch
@@ -191,6 +206,7 @@ export default function PhyloTree({
                   showSupportValues={showSupportValues}
                   colorFunction={colorFunction}
                   alignTips={alignTips}
+                  leafTextComponent={leafTextComponent}
                 />
               </React.Fragment>
             );

@@ -2,6 +2,10 @@ import { useReducer } from "react";
 
 import { GeneModel, MultipleSequenceAlignment, PhyloTree, Tree, SequenceInterval, Sequence } from "../src/index";
 
+declare const msa: Sequence[];
+declare const nj_tree: Tree;
+declare const ml_tree: Tree;
+
 function loadJson(filename: string): Tree & SequenceInterval & Sequence[] {
   const request = new XMLHttpRequest();
   request.overrideMimeType("application/json");
@@ -72,8 +76,8 @@ export default function App(): JSX.Element {
     showSupportValues: true,
     shadeBranchBySupport: true,
     fontSize: 11,
-    width: 940,
-    height: 740,
+    width: 1200,
+    height: 800,
     panMin: 0,
     panMax: 100,
   });
@@ -125,7 +129,6 @@ export default function App(): JSX.Element {
         </button>
         <GeneModel gene={geneModel} panMin={state.panMin} panMax={state.panMax}/>
       </section>
-      
       <hr/>
 
       <section className='section'>
@@ -156,6 +159,7 @@ export default function App(): JSX.Element {
 
       <section className='section'>
       <h1 className='title'>Phylogenetic tree</h1>
+      <h2 className='subtitle'>Maximum Likelihood</h2>
         <label>
           <input
             type="checkbox"

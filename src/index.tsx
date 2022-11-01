@@ -4,7 +4,7 @@ import MultipleSequenceAlignment, {
 } from "./MultipleSequenceAlignment";
 import PhyloTree, {
   Tree,
-  NodeFn,
+  LeafFn,
   colorFn,
   Node,
   TreeNodeProps,
@@ -18,7 +18,7 @@ export {
   Sequence,
   PhyloTree,
   Tree,
-  NodeFn,
+  LeafFn,
   colorFn,
   Node,
   TreeNodeProps,
