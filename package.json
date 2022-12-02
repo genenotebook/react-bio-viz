@@ -86,7 +86,7 @@
     "@types/lodash": "4.14.178",
     "@types/prop-types": "15.7.4",
     "@types/randomcolor": "0.5.6",
-    "@types/react": "18.0.0",
+    "@types/react": "18.0.26",
     "@types/react-dom": "18.0.0",
     "color": "4.2.0",
     "d3": "7.3.0",
