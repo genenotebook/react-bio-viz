@@ -53,8 +53,8 @@
   },
   "devDependencies": {
     "@types/node": "^18.7.18",
-    "@typescript-eslint/eslint-plugin": "5.10.2",
-    "@typescript-eslint/parser": "5.10.2",
+    "@typescript-eslint/eslint-plugin": "5.62.0",
+    "@typescript-eslint/parser": "5.62.0",
     "bulma": "^0.9.4",
     "clean-webpack-plugin": "4.0.0",
     "css-loader": "^6.7.1",
