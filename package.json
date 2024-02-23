@@ -58,7 +58,7 @@
     "bulma": "^0.9.4",
     "clean-webpack-plugin": "4.0.0",
     "css-loader": "^6.7.1",
-    "eslint": "8.8.0",
+    "eslint": "8.57.0",
     "eslint-plugin-react": "7.28.0",
     "mini-css-extract-plugin": "^2.6.1",
     "node-sass": "^7.0.3",
