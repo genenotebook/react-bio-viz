@@ -80,7 +80,7 @@
   "dependencies": {
     "@emotion/css": "^11.10.0",
     "@emotion/react": "^11.7.1",
-    "@types/color": "3.0.3",
+    "@types/color": "3.0.6",
     "@types/d3": "7.1.0",
     "@types/jest": "27.5.2",
     "@types/lodash": "4.17.6",
