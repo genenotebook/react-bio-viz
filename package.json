@@ -63,7 +63,7 @@
     "mini-css-extract-plugin": "^2.6.1",
     "node-sass": "^7.0.3",
     "sass-loader": "^13.0.2",
-    "source-map-loader": "3.0.2",
+    "source-map-loader": "5.0.0",
     "static-site-generator-webpack-plugin": "^3.3.0",
     "style-loader": "^3.3.1",
     "ts-loader": "9.4.0",
