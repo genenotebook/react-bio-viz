@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
-import { aaColors, ColorMap, PaletteName, BioLetter } from "./util";
-import { css } from "@emotion/css";
+import { useEffect, useRef } from 'react';
+import { aaColors, ColorMap, PaletteName, BioLetter } from './util';
+import { css } from '@emotion/css';
 
 export type Sequence = {
   header: string;
@@ -25,32 +25,32 @@ function RowNames({
         height,
         marginBlock: 0,
         paddingInline: 0,
-        paddingRight: ".5em",
-        overflow: "visible",
+        paddingRight: '.5em',
+        overflow: 'visible',
         zIndex: 2,
-        fontFamily: "helvetica; arial; monospace",
+        fontFamily: 'helvetica; arial; monospace',
       })}
     >
       {msa.map(({ header }) => (
         <li
           key={header}
           className={css({
-            overflow: "hidden",
+            overflow: 'hidden',
             height: rowHeight,
             fontSize: 8,
-            whiteSpace: "nowrap",
-            "&:hover": {
-              overflow: "visible",
+            whiteSpace: 'nowrap',
+            '&:hover': {
+              overflow: 'visible',
             },
           })}
         >
           <span
             className={css({
-              backgroundColor: "white",
-              display: "inline-block",
+              backgroundColor: 'white',
+              display: 'inline-block',
               zIndex: 2,
-              paddingRight: ".25em",
-              fontWeight: header === 'Consensus' ? 800 : 500
+              paddingRight: '.25em',
+              fontWeight: header === 'Consensus' ? 800 : 500,
             })}
           >
             {header}
@@ -65,7 +65,7 @@ export default function MultipleSequenceAlignment({
   msa,
   width,
   height,
-  palette = "individual",
+  palette = 'individual',
   rowHeight = 10,
   rowHeaderWidth = 100,
   showRowHeader = true,
@@ -84,18 +84,18 @@ export default function MultipleSequenceAlignment({
 }): JSX.Element {
   const msaWidth = Object.values(msa)[0].sequence.length * colWidth;
   const canvasWidth =
-    typeof width !== "undefined" ? Math.max(width, msaWidth) : msaWidth;
+    typeof width !== 'undefined' ? Math.max(width, msaWidth) : msaWidth;
 
-  const maxWidth = typeof width === "undefined" ? canvasWidth : width;
+  const maxWidth = typeof width === 'undefined' ? canvasWidth : width;
 
   const canvasHeight = (msa.length + 1) * rowHeight;
-  const maxHeight = typeof height === "undefined" ? canvasHeight : height;
+  const maxHeight = typeof height === 'undefined' ? canvasHeight : height;
   const colorMap: ColorMap = aaColors.has(palette as PaletteName)
     ? (aaColors.get(palette as PaletteName) as ColorMap)
-    : (aaColors.get("polarity") as ColorMap);
+    : (aaColors.get('polarity') as ColorMap);
 
   const msaWithConsensus = [
-    { header: "Consensus", sequence: getConsensus(msa) },
+    { header: 'Consensus', sequence: getConsensus(msa) },
     ...msa,
   ];
 
@@ -104,28 +104,28 @@ export default function MultipleSequenceAlignment({
   useEffect(() => {
     if (canvasRef && canvasRef.current) {
       const canvas = canvasRef.current;
-      const context = canvas.getContext("2d");
+      const context = canvas.getContext('2d');
       if (context) {
         context.font = `${rowHeight * 0.9}px monospace`;
         msaWithConsensus.forEach(({ sequence }, seq_i) => {
           // individual nucl/aa
-          sequence.split("").forEach((letter, char_i) => {
+          sequence.split('').forEach((letter, char_i) => {
             // draw a square
-            context.fillStyle = colorMap.get(letter as BioLetter) || "#000000";
+            context.fillStyle = colorMap.get(letter as BioLetter) || '#000000';
             context.fillRect(
               char_i * colWidth, // + _rowHeaderWidth, // x
               seq_i * rowHeight, // y
               (width = colWidth),
-              (height = rowHeight)
+              (height = rowHeight),
             );
             // add the letter
             if (showText && colWidth >= 10 && rowHeight >= 10) {
-              context.fillStyle = "black";
-              context.textAlign = "center";
+              context.fillStyle = 'black';
+              context.textAlign = 'center';
               context.fillText(
                 letter, // text
                 /*_rowHeaderWidth +*/ (char_i + 0.5) * colWidth, // x
-                (seq_i + 0.8) * rowHeight // y
+                (seq_i + 0.8) * rowHeight, // y
               );
             }
           });
@@ -137,9 +137,9 @@ export default function MultipleSequenceAlignment({
   return (
     <div
       className={`multiple-sequence-alignment ${css({
-        display: "flex",
+        display: 'flex',
         maxHeight,
-        overflow: "auto",
+        overflow: 'auto',
       })}`}
     >
       {showRowHeader && rowHeight > 10 && (
@@ -166,7 +166,7 @@ export default function MultipleSequenceAlignment({
 
 function getConsensus(msa: Sequence[]): string {
   const transposedMsa = msa[0].sequence
-    .split("")
+    .split('')
     .map((_, colIndex) => msa.map(({ sequence }) => sequence.charAt(colIndex)));
   return transposedMsa
     .map((seq: string[]) => {
@@ -184,5 +184,5 @@ function getConsensus(msa: Sequence[]): string {
       });
       return max;
     })
-    .join("");
+    .join('');
 }

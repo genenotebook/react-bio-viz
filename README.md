@@ -1,4 +1,5 @@
 # react-bio-viz
+
 React components for biological data visualization
 
 - Gene model
@@ -6,11 +7,13 @@ React components for biological data visualization
 - Phylogenetic tree
 
 To install
+
 ```
 npm install react-bio-viz
 ```
 
 To use
+
 ```jsx
 import React from 'react';
 
@@ -39,10 +42,12 @@ function App(): JSX.Element {
 ```
 
 To see examples, start a development server (loading is currently slow)
+
 ```
 git clone https://github.com/genenotebook/react-bio-viz
 cd react-bio-viz
+npm install
 npm run start:dev
 ```
 
-![showcase](showcase.png "react-bio-viz examples")
+![showcase](showcase.png 'react-bio-viz examples')

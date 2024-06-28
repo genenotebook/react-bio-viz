@@ -1,18 +1,18 @@
 import React from 'react';
-import { scaleLinear, ScaleLinear } from "d3";
-import randomColor from "randomcolor";
-import Color from "color";
-import { groupBy, Dictionary } from "lodash";
-import { css } from "@emotion/css";
+import { scaleLinear, ScaleLinear } from 'd3';
+import randomColor from 'randomcolor';
+import Color from 'color';
+import { groupBy, Dictionary } from 'lodash';
+import { css } from '@emotion/css';
 
-import { Popover, PopoverTrigger, PopoverBody } from './popover'
+import { Popover, PopoverTrigger, PopoverBody } from './popover';
 
 const HOVER_CSS_CLASS = css({
-  cursor: "pointer",
+  cursor: 'pointer',
   strokeWidth: '1.5px',
-  "&:hover": {
-    strokeWidth: "3px",
-    stroke: "hsl(204, 86%, 53%)", //Bulma info color
+  '&:hover': {
+    strokeWidth: '3px',
+    stroke: 'hsl(204, 86%, 53%)', //Bulma info color
   },
 });
 
@@ -38,7 +38,7 @@ function Scale({
   }
   return (
     <g
-      className={css({ fontFamily: "helvetica; arial; monospace" })}
+      className={css({ fontFamily: 'helvetica; arial; monospace' })}
       transform={transform}
     >
       <line x1={range[0]} x2={range[1]} y1="5" y2="5" stroke="black" />
@@ -109,11 +109,11 @@ export type SequenceInterval = {
   /**
    * Sequence strand
    */
-  strand: "+" | "-" | ".";
+  strand: '+' | '-' | '.';
   /**
    * Interval phase (only relevant for CDS features)
    */
-  phase: 0 | 1 | 2 | ".";
+  phase: 0 | 1 | 2 | '.';
   /**
    * Additional attributes (AKA gff3 column 9)
    * @example
@@ -141,7 +141,7 @@ function Exon({
   interval,
   colorSeed,
   scale,
-  exonPopoverFn
+  exonPopoverFn,
 }: {
   /**
    * Sequence interval object
@@ -156,9 +156,9 @@ function Exon({
    */
   scale: ScaleLinear<number, number>;
   /**
-   * 
+   *
    */
-  exonPopoverFn: (arg0: SequenceInterval) => JSX.Element
+  exonPopoverFn: (arg0: SequenceInterval) => JSX.Element;
 }) {
   const { start, end, interval_type, ID } = interval;
 
@@ -167,8 +167,8 @@ function Exon({
     ? baseColor.darken(0.5).saturate(0.3)
     : baseColor.lighten(0.5).desaturate(0.3);
 
-  const fill = interval_type === "CDS" ? baseColor : contrastColor;
-  const height = interval_type === "CDS" ? 10 : 4;
+  const fill = interval_type === 'CDS' ? baseColor : contrastColor;
+  const height = interval_type === 'CDS' ? 10 : 4;
   return (
     <Popover>
       <PopoverTrigger>
@@ -181,9 +181,7 @@ function Exon({
           className={HOVER_CSS_CLASS}
         />
       </PopoverTrigger>
-      <PopoverBody header={ID}>
-        { exonPopoverFn(interval) }
-      </PopoverBody>
+      <PopoverBody header={ID}>{exonPopoverFn(interval)}</PopoverBody>
     </Popover>
   );
 }
@@ -228,61 +226,51 @@ function getTranscriptChildren({
     for (const interval of _intervals) {
       const intervalParents = interval.attributes.parent || [];
       if (
-        intervalParents.indexOf(transcript.ID) >= 0
-        && interval.interval_type !== 'mRNA'
+        intervalParents.indexOf(transcript.ID) >= 0 &&
+        interval.interval_type !== 'mRNA'
       ) {
         children.push(interval);
       }
     }
   }
-  return children
+  return children;
 }
 
 function defaultPopoverFn(exon: SequenceInterval): JSX.Element {
-  return <ul>
-    <li>
-      ID: {exon.ID}
-    </li>
-    <li>
-      Source: {exon.source}
-    </li>
-    <li>
-      Coordinates: {exon.seqid}:{exon.start}..{exon.end}
-    </li>
-    <li>
-      Strand: {exon.strand}
-    </li>
-    <li>
-      Score: {exon.score}
-    </li>
-    <li>
-      Type: {exon.interval_type}
-    </li>
-    {
-      Object
-      .entries(exon.attributes)
-      .map(([attributeName, attributeValues]) => {
-        if (Array.isArray(attributeValues) && attributeValues.length > 1){
-          return (
-            <li>{attributeName}:
-              <ul>
-                {
-                  attributeValues.map(attributeValue => (
+  return (
+    <ul>
+      <li>ID: {exon.ID}</li>
+      <li>Source: {exon.source}</li>
+      <li>
+        Coordinates: {exon.seqid}:{exon.start}..{exon.end}
+      </li>
+      <li>Strand: {exon.strand}</li>
+      <li>Score: {exon.score}</li>
+      <li>Type: {exon.interval_type}</li>
+      {Object.entries(exon.attributes).map(
+        ([attributeName, attributeValues]) => {
+          if (Array.isArray(attributeValues) && attributeValues.length > 1) {
+            return (
+              <li>
+                {attributeName}:
+                <ul>
+                  {attributeValues.map((attributeValue) => (
                     <li>{attributeValue}</li>
-                  ))
-                }
-              </ul>
-            </li>
-          )
-        } else {
-          return <li>
-            {attributeName}: {attributeValues}
-          </li>
-        }
-       
-      })
-    }
-  </ul>
+                  ))}
+                </ul>
+              </li>
+            );
+          } else {
+            return (
+              <li>
+                {attributeName}: {attributeValues}
+              </li>
+            );
+          }
+        },
+      )}
+    </ul>
+  );
 }
 
 /**
@@ -316,7 +304,7 @@ function defaultPopoverFn(exon: SequenceInterval): JSX.Element {
 export default function GeneModel({
   gene,
   width = 500,
-  colorSeed = "42",
+  colorSeed = '42',
   showScale = true,
   exonPopoverFn = defaultPopoverFn,
   panMin = 0,
@@ -326,19 +314,19 @@ export default function GeneModel({
   width?: number;
   colorSeed?: string;
   showScale?: boolean;
-  exonPopoverFn?: (arg0: SequenceInterval) => JSX.Element,
-  panMin?: number,
-  panMax?: number,
+  exonPopoverFn?: (arg0: SequenceInterval) => JSX.Element;
+  panMin?: number;
+  panMax?: number;
 }): JSX.Element {
   const _panMin = Math.min(Math.max(0, panMin), 100) / 100;
-  const _panMax = 1 - (Math.max(Math.min(100, panMax), 0) / 100);
+  const _panMax = 1 - Math.max(Math.min(100, panMax), 0) / 100;
   const geneLength = gene.end - gene.start;
   const padding = Math.round(0.1 * geneLength);
-  const start = Math.max(0, gene.start - padding) + (_panMin * geneLength);
-  const end = gene.end + padding - (_panMax * geneLength);
+  const start = Math.max(0, gene.start - padding) + _panMin * geneLength;
+  const end = gene.end + padding - _panMax * geneLength;
   const intervals = groupBy(gene.children, (interval) => interval.ID);
   const transcripts =
-    gene.children?.filter((child) => child.interval_type === "mRNA") || [];
+    gene.children?.filter((child) => child.interval_type === 'mRNA') || [];
   const height = 14 * transcripts.length + 46;
   const margin = {
     top: 10,
@@ -370,7 +358,7 @@ export default function GeneModel({
                 {transcriptChildren
                   .slice()
                   .sort((interval) =>
-                    interval.interval_type === "CDS" ? 1 : 0
+                    interval.interval_type === 'CDS' ? 1 : 0,
                   )
                   .map((interval: SequenceInterval) => (
                     <Exon
@@ -384,7 +372,8 @@ export default function GeneModel({
               </Transcript>
             );
           })}
-        </g> {/* End genemodelgroup */}
+        </g>{' '}
+        {/* End genemodelgroup */}
         {showScale && (
           <Scale
             scale={scale}

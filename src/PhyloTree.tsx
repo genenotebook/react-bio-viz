@@ -1,51 +1,65 @@
-import React from "react";
-import { cluster, hierarchy } from "d3";
-import randomColor from "randomcolor";
-import { css } from "@emotion/css";
+import React from 'react';
+import { cluster, hierarchy } from 'd3';
+import randomColor from 'randomcolor';
+import { css } from '@emotion/css';
+import { HierarchyPointNode } from 'd3';
 
 function TreeBranch({ node, shadeBranchBySupport }: TreeNodeProps) {
   return (
     <path
-      d={`M${node.parent.y},${node.parent.x}
-          L${node.parent.y},${node.x}
+      d={`M${node.parent!.y},${node.parent!.x}
+          L${node.parent!.y},${node.x}
           L${node.y},${node.x}`}
       className={css({
-        fill: "none",
-        stroke: "black",
+        fill: 'none',
+        stroke: 'black',
         strokeWidth: 0.75,
-        opacity: shadeBranchBySupport
-          ? (node.parent.data.name as unknown as number)
-          : 0.9,
+        opacity: shadeBranchBySupport ? Number(node.parent!.data.name) : 0.9,
       })}
     />
   );
 }
 
-function defaultLeafText({ node, fontSize = 11 }: {node:Node, fontSize?: Number}): JSX.Element {
+function defaultLeafText({
+  node,
+  fontSize = 11,
+}: {
+  node: HierarchyPointNode<Tree>;
+  fontSize?: number;
+}): JSX.Element {
   const {
     data: { name },
-    x,
   } = node;
   return (
-    <text x={0} y={0} className={css({fontFamily: 'sans-serif', fontSize: `${fontSize}` })}>
+    <text
+      x={0}
+      y={0}
+      className={css({ fontFamily: 'sans-serif', fontSize: `${fontSize}` })}
+    >
       {name}
     </text>
-  )
+  );
 }
 
-function LeafNode({ node, colorFunction, leafTextComponent, fontSize, alignTips }: TreeNodeProps) {
+function LeafNode({
+  node,
+  colorFunction,
+  leafTextComponent,
+  // alignTips,
+}: TreeNodeProps) {
   const {
     data: { name },
     x,
   } = node;
-  const textY = alignTips ? node.tipAlignY || node.y + 10 : node.y + 10;
+  // const textY = alignTips ? node.tipAlignY || node.y + 10 : node.y + 10;
+  const textY = node.y + 10;
   const nodeY = node.y + 4;
-  const colorSeed = typeof colorFunction !== "undefined"
-    ? colorFunction(node)
-    : name;
-  const LeafTextComponent = typeof leafTextComponent === 'undefined'
-    ? defaultLeafText
-    : leafTextComponent;
+  const colorSeed =
+    typeof colorFunction !== 'undefined' ? colorFunction(node) : name;
+  const LeafTextComponent =
+    typeof leafTextComponent === 'undefined'
+      ? defaultLeafText
+      : leafTextComponent;
   return (
     <g className="tipnode">
       <title>{name}</title>
@@ -55,9 +69,9 @@ function LeafNode({ node, colorFunction, leafTextComponent, fontSize, alignTips 
         y1={x}
         y2={x}
         className={css({
-          stroke: "darkgrey",
+          stroke: 'darkgrey',
           strokeWidth: 1,
-          strokeDasharray: "1,2",
+          strokeDasharray: '1,2',
         })}
       />
       <circle
@@ -66,7 +80,7 @@ function LeafNode({ node, colorFunction, leafTextComponent, fontSize, alignTips 
         cx={nodeY}
         r="4.5"
       />
-      <g transform={`translate(${textY},${x+4})`}>
+      <g transform={`translate(${textY},${x + 4})`}>
         <LeafTextComponent node={node} />
       </g>
     </g>
@@ -74,18 +88,23 @@ function LeafNode({ node, colorFunction, leafTextComponent, fontSize, alignTips 
 }
 
 function InternalNode({ node, fontSize, showSupportValues }: TreeNodeProps) {
-  if (!showSupportValues) return <></>
+  if (!showSupportValues) return <></>;
   const { data, x, y } = node;
   const { name } = data;
   return (
-    <text x={y + 3} y={x + 2} dominantBaseline="middle" className={css({fontSize, fontFamily: 'sans-serif'})}>
+    <text
+      x={y + 3}
+      y={x + 2}
+      dominantBaseline="middle"
+      className={css({ fontSize, fontFamily: 'sans-serif' })}
+    >
       {name}
     </text>
   );
 }
 
 export type TreeNodeProps = {
-  node: Node;
+  node: HierarchyPointNode<Tree>;
   showSupportValues?: boolean;
   shadeBranchBySupport?: boolean;
   colorFunction?: colorFn;
@@ -114,7 +133,7 @@ export type Node = {
   tipAlignY?: number;
 };
 
-function defaultColorFunction(node: Node): string {
+function defaultColorFunction(node: HierarchyPointNode<Tree>): string {
   const { data } = node;
   const { name } = data;
   return name.split(' ').slice(0, -1).join();
@@ -123,19 +142,22 @@ function defaultColorFunction(node: Node): string {
 function setNodeHeight(
   node: Node,
   currentHeight: number,
-  scalingFactor: number
+  scalingFactor: number,
 ): void {
   node.tipAlignY = node.y;
   node.y = (currentHeight + node.data.length) * scalingFactor;
   if (node.children) {
     node.children.forEach((childNode) =>
-      setNodeHeight(childNode, currentHeight + node.data.length, scalingFactor)
+      setNodeHeight(childNode, currentHeight + node.data.length, scalingFactor),
     );
   }
 }
 
-export type LeafFn = (arg0:{node: Node, fontFamily?: Number}) => JSX.Element;
-export type colorFn = (node: Node) => string;
+export type LeafFn = (arg0: {
+  node: HierarchyPointNode<Tree>;
+  fontFamily?: number;
+}) => JSX.Element;
+export type colorFn = (node: HierarchyPointNode<Tree>) => string;
 
 export default function PhyloTree({
   tree,
@@ -167,21 +189,22 @@ export default function PhyloTree({
     right: 500,
   };
 
-  const treeLayout = cluster()
+  const treeLayout = cluster<Tree>()
     .size([
       height - margin.top - margin.bottom,
       width - margin.left - margin.right,
     ])
     .separation(() => 1);
 
-  const treeRoot = hierarchy(tree, (node) => node.children);
+  const treeRoot = hierarchy(tree);
 
-  const treeData = treeLayout(treeRoot).sum((node: any) => node.depth);
+  const treeData = treeLayout(treeRoot);
+  // treeData.sum((node: HierarchyPointNode<Tree>) => node.depth);
 
   if (!cladogram) {
     const initialHeight = 0;
     const scalingFactor = 400;
-    setNodeHeight(treeData as Node, initialHeight, scalingFactor);
+    setNodeHeight(treeData as unknown as Node, initialHeight, scalingFactor);
   }
 
   const nodes = treeData.descendants().filter((node) => node.parent);
@@ -190,9 +213,9 @@ export default function PhyloTree({
     <div className="tree">
       <svg width={width} height={height}>
         <g transform={`translate(${margin.left},${margin.top})`}>
-          {nodes.map((node: any) => {
+          {nodes.map((node) => {
             const TreeNode =
-              typeof node.children === "undefined" ? LeafNode : InternalNode;
+              typeof node.children === 'undefined' ? LeafNode : InternalNode;
             return (
               <React.Fragment key={`${node.x}_${node.y}`}>
                 <TreeBranch

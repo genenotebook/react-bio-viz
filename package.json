@@ -7,8 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.js",
     "build:app": "webpack --config webpack.app.config.js",
-    "lint": "eslint . --ext .tsx",
-    "start:dev": "webpack-dev-server --config webpack.dev.config.js"
+    "start:dev": "webpack-dev-server --config webpack.dev.config.js",
+    "format": "prettier --check .",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -24,51 +25,27 @@
   "files": [
     "/dist"
   ],
-  "eslintConfig": {
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint",
-      "prettier"
-    ],
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/eslint-recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:react/recommended"
-    ],
-    "rules": {
-      "no-console": 2,
-      "react/jsx-uses-vars": 1,
-      "react/react-in-jsx-scope": "off",
-      "prettier/prettier": "error"
-    },
-    "requireConfigFile": false
-  },
-  "prettier": {
-    "singleQuote": true,
-    "tabWidth": 2,
-    "useTabs": false,
-    "semi": true
-  },
   "devDependencies": {
+    "@eslint/js": "^9.5.0",
+    "@types/eslint__js": "^8.42.3",
     "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "7.14.1",
-    "@typescript-eslint/parser": "7.14.1",
     "bulma": "^1.0.0",
     "clean-webpack-plugin": "4.0.0",
     "css-loader": "^7.0.0",
-    "eslint": "9.5.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "7.34.3",
     "mini-css-extract-plugin": "^2.6.1",
     "node-sass": "^9.0.0",
-    "sass-loader": "^14.0.0",
+    "prettier": "3.3.2",
+    "sass-loader": "^14.2.1",
     "source-map-loader": "5.0.0",
     "static-site-generator-webpack-plugin": "^3.3.0",
     "style-loader": "^4.0.0",
     "ts-loader": "9.5.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.0",
+    "typescript": "^5.5.2",
+    "typescript-eslint": "^7.14.1",
     "webpack": "^5.71.0",
     "webpack-cli": "^5.0.0",
     "webpack-dev-server": "5.0.4"

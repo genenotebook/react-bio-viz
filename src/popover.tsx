@@ -8,22 +8,23 @@ import { usePopper } from 'react-popper';
 type ReactChildren = JSX.Element[] | JSX.Element;
 
 type PopoverTrigger = React.ReactElement & {
-  onClick?: () => void,
+  onClick?: () => void;
   setReferenceElement?: () => void;
-}
+};
 
 export function PopoverTrigger({
   children,
   togglePopover,
   setReferenceElement,
-}:{
-  children: React.ReactElement,
-  togglePopover?: () => void,
-  setReferenceElement?: () => void,
+}: {
+  children: React.ReactElement;
+  togglePopover?: () => void;
+  setReferenceElement?: () => void;
 }): PopoverTrigger {
   const child = React.Children.only(children);
   return React.cloneElement(child, {
-    onClick: togglePopover, ref: setReferenceElement,
+    onClick: togglePopover,
+    ref: setReferenceElement,
   });
 }
 
@@ -37,22 +38,22 @@ export function PopoverBody({
   attributes,
   togglePopover,
   widthBody = 400,
-}:{
-  header: string,
-  children?: ReactChildren,
-  showPopover?: Boolean,
-  container?: Element,
-  setPopperElement?: () => void,
-  styles?: Record<'popper' & string, any>,
-  attributes?: Record<'popper' & string, any>,
-  togglePopover?: () => void,
-  widthBody?: Number,
+}: {
+  header: string;
+  children?: ReactChildren;
+  showPopover?: Boolean;
+  container?: Element;
+  setPopperElement?: () => void;
+  styles?: Record<'popper' & string, any>;
+  attributes?: Record<'popper' & string, any>;
+  togglePopover?: () => void;
+  widthBody?: Number;
 }): JSX.Element {
   if (!showPopover || container === undefined) {
     return <></>;
   }
-  const _styles = styles === undefined ? {'popper':{}} : styles
-  const _attributes = attributes === undefined ? {'popper':{}} : attributes
+  const _styles = styles === undefined ? { popper: {} } : styles;
+  const _attributes = attributes === undefined ? { popper: {} } : attributes;
   const popoverBody = (
     <div
       id="popover"
@@ -77,10 +78,8 @@ export function PopoverBody({
           </button>
           {header}
         </p>
-        <div className='panel-block'>
-          <div className='content is-small'>
-            {children}
-          </div>
+        <div className="panel-block">
+          <div className="content is-small">{children}</div>
         </div>
       </nav>
     </div>
@@ -88,7 +87,11 @@ export function PopoverBody({
   return createPortal(popoverBody, container);
 }
 
-export function Popover({ children }: { children: ReactChildren }): JSX.Element {
+export function Popover({
+  children,
+}: {
+  children: ReactChildren;
+}): JSX.Element {
   const [showPopover, setShowPopover] = useState(false);
   function togglePopover() {
     setShowPopover(!showPopover);
@@ -112,9 +115,9 @@ export function Popover({ children }: { children: ReactChildren }): JSX.Element 
 
   return (
     <>
-      {React.Children
-        .map(children, (child) => React.cloneElement(child, childProps))
-      }
+      {React.Children.map(children, (child) =>
+        React.cloneElement(child, childProps),
+      )}
     </>
-  )
+  );
 }

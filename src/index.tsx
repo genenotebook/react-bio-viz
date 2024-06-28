@@ -1,14 +1,14 @@
-import GeneModel, { SequenceInterval } from "./GeneModel";
+import GeneModel, { SequenceInterval } from './GeneModel';
 import MultipleSequenceAlignment, {
   Sequence,
-} from "./MultipleSequenceAlignment";
+} from './MultipleSequenceAlignment';
 import PhyloTree, {
   Tree,
   LeafFn,
   colorFn,
   Node,
   TreeNodeProps,
-} from "./PhyloTree";
+} from './PhyloTree';
 require('./stylesheet.scss');
 
 export {
