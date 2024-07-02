@@ -72,6 +72,7 @@ export default function MultipleSequenceAlignment({
   colWidth = 10,
   showText = true,
 }: {
+  /**JSON formated multiple sequence alignment */
   msa: Sequence[];
   width?: number;
   height?: number;
