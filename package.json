@@ -14,10 +14,14 @@
   },
   "homepage": "https://github.com/genenotebook/react-bio-viz#readme",
   "exports": {
-    ".": "./dist/main.js"
+    ".": {
+      "module": "./dist/main.esm.js",
+      "import": "./dist/main.cjs.js",
+      "default": "./dist/main.cjs.js"
+    }
   },
-  "module": "./dist/main.js",
-  "main": "./dist/main.js",
+  "module": "./dist/main.esm.js",
+  "main": "./dist/main.cjs.js",
   "types": "./dist/main.d.ts",
   "files": [
     "./dist/*"

@@ -12,7 +12,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'lib/main.ts'),
-      formats: ['es']
+      formats: ['es','cjs'],
+      fileName: (format, entryAlias) => `${entryAlias}.${format}.js`
     },
     copyPublicDir: false,
     rollupOptions: {
