@@ -13,10 +13,14 @@
     "url": "https://github.com/genenotebook/react-bio-viz/issues"
   },
   "homepage": "https://github.com/genenotebook/react-bio-viz#readme",
-  "main": "dist/react-bio-viz.js",
-  "types": "dist/main.d.ts",
+  "exports": {
+    ".": "./dist/main.js"
+  },
+  "module": "./dist/main.js",
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
   "files": [
-    "dist/*"
+    "./dist/*"
   ],
   "scripts": {
     "dev": "vite",

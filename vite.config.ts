@@ -17,6 +17,9 @@ export default defineConfig({
     copyPublicDir: false,
     rollupOptions: {
       external: ['react', 'react/jsx-runtime'],
+      output: {
+        interop: 'auto'
+      }
     }
   }
 })
