@@ -16,7 +16,7 @@
   "main": "dist/react-bio-viz.js",
   "types": "dist/main.d.ts",
   "files": [
-    "dist"
+    "dist/*"
   ],
   "scripts": {
     "dev": "vite",
