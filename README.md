@@ -17,11 +17,9 @@ To use
 ```jsx
 import React from 'react';
 
-import { GeneModel, MultipleSequenceAlignment, Tree } from '../src/index'
+import { GeneModel, MultipleSequenceAlignment, Tree } from 'react-bio-viz'
 
-import gene from './data/genemodel.json'
-import msa from './data/multiple_sequence_alignment.json'
-import tree from './data/tree.json'
+import { genemodel, msa, tree } from './src/data'
 
 function App(): JSX.Element {
   return (
@@ -47,7 +45,7 @@ To see examples, start a development server (loading is currently slow)
 git clone https://github.com/genenotebook/react-bio-viz
 cd react-bio-viz
 npm install
-npm run start:dev
+npm run dev
 ```
 
 ![showcase](showcase.png 'react-bio-viz examples')
