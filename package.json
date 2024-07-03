@@ -13,9 +13,11 @@
     "url": "https://github.com/genenotebook/react-bio-viz/issues"
   },
   "homepage": "https://github.com/genenotebook/react-bio-viz#readme",
-  "main": "dist/main.js",
+  "main": "dist/react-bio-viz.js",
   "types": "dist/main.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -39,15 +41,17 @@
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react-swc": "^3.5.0",
+    "bulma": "^1.0.1",
     "color": "^4.2.3",
     "d3": "^7.9.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "randomcolor": "^0.6.2",
-    "react-popper": "^2.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-popper": "^2.3.0",
+    "sass": "^1.77.6",
     "typescript": "^5.2.2",
     "vite": "^5.3.1",
     "vite-plugin-dts": "^3.9.1"
