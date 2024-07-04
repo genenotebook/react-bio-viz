@@ -112,6 +112,9 @@ export type TreeNodeProps = {
   alignTips?: boolean;
 };
 
+/**
+ * @public
+ */
 export type Tree = {
   ID?: string | number;
   name: string;
@@ -158,6 +161,11 @@ export type LeafFn = (arg0: {
 }) => JSX.Element;
 export type colorFn = (node: HierarchyPointNode<Tree>) => string;
 
+/**
+ * @public
+ * @param param0
+ * @returns JSX.Element
+ */
 export function PhyloTree({
   tree,
   height = 900,

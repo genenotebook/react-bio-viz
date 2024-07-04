@@ -1,11 +1,13 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": ["lib/**/*"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["./lib/*"]
-    }
+    },
+    "jsx": "preserve",
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "Bundler"
   },
   "references": [
     {

@@ -7,20 +7,17 @@ import dts from 'vite-plugin-dts'
 export default defineConfig({
   plugins: [
     react(),
-    dts({ include: ['lib'], tsconfigPath: './tsconfig.build.json' })
+    dts({ include: ['lib'], tsconfigPath: './tsconfig.dts.json' })
   ],
   build: {
     lib: {
       entry: resolve(__dirname, 'lib/main.ts'),
       formats: ['es','cjs'],
-      fileName: (format, entryAlias) => `${entryAlias}.${format}.js`
+      fileName: (format, entryAlias) => `${entryAlias}.${format}.js`,
     },
     copyPublicDir: false,
     rollupOptions: {
       external: ['react', 'react/jsx-runtime'],
-      output: {
-        interop: 'auto'
-      }
     }
   }
 })

@@ -2,10 +2,20 @@ import { useEffect, useRef } from "react";
 import { aaColors, ColorMap, PaletteName, BioLetter } from "./util";
 import { css } from "@emotion/css";
 
+/**
+ * @public
+ */
 export type Sequence = {
+  // Sequence identifier (e.g. from fasta header)
   header: string;
+  // Arbitrary biological sequence (nucleotide, amino acid, etc.)
   sequence: string;
 };
+
+/**
+ * @public
+ */
+export type MSA = Sequence[];
 
 function RowNames({
   msa,
@@ -13,7 +23,7 @@ function RowNames({
   width,
   rowHeight,
 }: {
-  msa: Sequence[];
+  msa: MSA;
   height: number;
   width: number;
   rowHeight: number;
@@ -61,7 +71,7 @@ function RowNames({
   );
 }
 
-function getConsensus(msa: Sequence[]): string {
+function getConsensus(msa: MSA): string {
   const transposedMsa = msa[0].sequence
     .split("")
     .map((_, colIndex) => msa.map(({ sequence }) => sequence.charAt(colIndex)));
@@ -84,6 +94,11 @@ function getConsensus(msa: Sequence[]): string {
     .join("");
 }
 
+/**
+ * @public
+ * @param param0
+ * @returns
+ */
 export function MultipleSequenceAlignment({
   msa,
   width,
@@ -96,7 +111,7 @@ export function MultipleSequenceAlignment({
   showText = true,
 }: {
   /**JSON formated multiple sequence alignment */
-  msa: Sequence[];
+  msa: MSA;
   width?: number;
   height?: number;
   palette?: string;

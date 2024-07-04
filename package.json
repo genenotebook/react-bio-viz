@@ -15,12 +15,12 @@
   "homepage": "https://github.com/genenotebook/react-bio-viz#readme",
   "exports": {
     ".": {
-      "module": "./dist/main.esm.js",
+      "module": "./dist/main.es.js",
       "import": "./dist/main.cjs.js",
       "default": "./dist/main.cjs.js"
     }
   },
-  "module": "./dist/main.esm.js",
+  "module": "./dist/main.es.js",
   "main": "./dist/main.cjs.js",
   "types": "./dist/main.d.ts",
   "files": [
@@ -31,7 +31,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "predocs": "npm run build",
+    "docs": "mkdir -p docs && api-extractor run --local --verbose && api-documenter markdown -i temp -o docs"
   },
   "peerDependencies": {
     "react": "^18.3.1",
@@ -39,6 +41,8 @@
   },
   "devDependencies": {
     "@emotion/css": "^11.11.2",
+    "@microsoft/api-documenter": "^7.25.4",
+    "@microsoft/api-extractor": "^7.47.0",
     "@types/color": "^3.0.6",
     "@types/d3": "^7.4.3",
     "@types/lodash": "^4.17.6",

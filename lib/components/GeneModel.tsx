@@ -72,6 +72,7 @@ function Scale({
 }
 
 /**
+ * @public
  * Sequence interval object based on gff3 field specs. Recursively defined:
  * SequenceInterval children are SequenceIntervals themselves.
  */
@@ -273,6 +274,7 @@ function defaultPopoverFn(exon: SequenceInterval): JSX.Element {
 }
 
 /**
+ * @public
  * GeneModel component
  * @example A minimal setting:
  *
@@ -293,12 +295,11 @@ function defaultPopoverFn(exon: SequenceInterval): JSX.Element {
  * </ReactResizeDetector>
  * ```
  * @param options
- * @param options.gene SequenceInterval object of the gene
- * @param options.width Width of the rendered SVG element (default = 500)
- * @param options.colorSeed String to be used as seed for random color generation
- * (default = "42")
- * @param options.showScale Show a scalebar indicating genomic position
- * (default = true)
+ * @param options.gene - SequenceInterval object of the gene
+ * @param options.width - Width of the rendered SVG element (default = 500)
+ * @param options.colorSeed - String to be used as seed for random color generation (default = "42")
+ * @param options.showScale - Show a scalebar indicating genomic position (default = true)
+ * @returns JSX.Element
  */
 export function GeneModel({
   gene,
