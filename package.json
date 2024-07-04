@@ -1,6 +1,6 @@
 {
   "name": "react-bio-viz",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "React components for biological data visualisation",
   "type": "module",
   "repository": {
