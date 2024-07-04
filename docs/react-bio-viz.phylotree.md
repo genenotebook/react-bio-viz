@@ -7,18 +7,7 @@
 **Signature:**
 
 ```typescript
-export declare function PhyloTree({ tree, height, width, cladogram, showSupportValues, shadeBranchBySupport, colorFunction, fontSize, alignTips, leafTextComponent, }: {
-    tree: Tree;
-    height?: number;
-    width?: number;
-    cladogram?: boolean;
-    showSupportValues?: boolean;
-    shadeBranchBySupport?: boolean;
-    colorFunction?: colorFn;
-    fontSize?: number;
-    alignTips?: boolean;
-    leafTextComponent?: LeafFn;
-}): JSX.Element;
+export declare function PhyloTree({ tree, height, width, cladogram, showSupportValues, shadeBranchBySupport, colorFunction, fontSize, alignTips, leafTextComponent, }: PhyloTreeProps): JSX.Element;
 ```
 
 ## Parameters
@@ -46,7 +35,7 @@ Description
 
 </td><td>
 
-{ tree: [Tree](./react-bio-viz.tree.md)<!-- -->; height?: number; width?: number; cladogram?: boolean; showSupportValues?: boolean; shadeBranchBySupport?: boolean; colorFunction?: colorFn; fontSize?: number; alignTips?: boolean; leafTextComponent?: LeafFn; }
+[PhyloTreeProps](./react-bio-viz.phylotreeprops.md)
 
 
 </td><td>

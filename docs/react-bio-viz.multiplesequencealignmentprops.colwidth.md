@@ -4,6 +4,8 @@
 
 ## MultipleSequenceAlignmentProps.colWidth property
 
+Width in pixels of individual columns in the MSA visualization (default = 10)
+
 **Signature:**
 
 ```typescript

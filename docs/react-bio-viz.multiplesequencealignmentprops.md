@@ -49,7 +49,7 @@ number
 
 </td><td>
 
-_(Optional)_
+_(Optional)_ Width in pixels of individual columns in the MSA visualization (default = 10)
 
 
 </td></tr>
@@ -68,7 +68,7 @@ number
 
 </td><td>
 
-_(Optional)_
+_(Optional)_ Maximum height of the HTML element, if the MSA is higher a scroll bar appears (default = num\_sequences \* rowHeight)
 
 
 </td></tr>
@@ -82,7 +82,7 @@ _(Optional)_
 
 </td><td>
 
-MSA
+[MSA](./react-bio-viz.msa.md)
 
 
 </td><td>
@@ -101,12 +101,12 @@ JSON formated multiple sequence alignment
 
 </td><td>
 
-string
+[PaletteName](./react-bio-viz.palettename.md)
 
 
 </td><td>
 
-_(Optional)_
+_(Optional)_ Color palette for coloring different residue types (default = 'individual')
 
 
 </td></tr>
@@ -125,7 +125,7 @@ number
 
 </td><td>
 
-_(Optional)_
+_(Optional)_ Maximum width in pixels of the sequence name field (default = 100)
 
 
 </td></tr>
@@ -144,7 +144,7 @@ number
 
 </td><td>
 
-_(Optional)_
+_(Optional)_ Height in pixels of indivual rows in the MSA visualization (default = 10)
 
 
 </td></tr>
@@ -163,7 +163,7 @@ boolean
 
 </td><td>
 
-_(Optional)_
+_(Optional)_ Whether or not to show sequence names (default = true)
 
 
 </td></tr>
@@ -182,7 +182,7 @@ boolean
 
 </td><td>
 
-_(Optional)_
+_(Optional)_ Whether or not to show letters for individual residues in the alignment
 
 
 </td></tr>
@@ -201,7 +201,7 @@ number
 
 </td><td>
 
-_(Optional)_ Maximum width of the HTML element, if the MSA is wider a scroll bar appears
+_(Optional)_ Maximum width of the HTML element, if the MSA is wider a scroll bar appears (default = num\_columns \* colWidth)
 
 
 </td></tr>

@@ -4,6 +4,8 @@
 
 ## MultipleSequenceAlignmentProps.showText property
 
+Whether or not to show letters for individual residues in the alignment
+
 **Signature:**
 
 ```typescript

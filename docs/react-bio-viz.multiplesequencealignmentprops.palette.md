@@ -4,8 +4,10 @@
 
 ## MultipleSequenceAlignmentProps.palette property
 
+Color palette for coloring different residue types (default = 'individual')
+
 **Signature:**
 
 ```typescript
-palette?: string;
+palette?: PaletteName;
 ```

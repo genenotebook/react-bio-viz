@@ -4,7 +4,7 @@
 
 ## MultipleSequenceAlignmentProps.width property
 
-Maximum width of the HTML element, if the MSA is wider a scroll bar appears
+Maximum width of the HTML element, if the MSA is wider a scroll bar appears (default = num\_columns \* colWidth)
 
 **Signature:**
 

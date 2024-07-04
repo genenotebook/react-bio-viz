@@ -106,15 +106,13 @@ export type TreeNodeProps = {
   node: HierarchyPointNode<Tree>;
   showSupportValues?: boolean;
   shadeBranchBySupport?: boolean;
-  colorFunction?: colorFn;
+  colorFunction?: ColorFn;
   leafTextComponent?: LeafFn;
   fontSize: number;
   alignTips?: boolean;
 };
 
-/**
- * @public
- */
+/** @public */
 export type Tree = {
   ID?: string | number;
   name: string;
@@ -155,15 +153,33 @@ function setNodeHeight(
   }
 }
 
+/** @public */
 export type LeafFn = (arg0: {
   node: HierarchyPointNode<Tree>;
-  fontFamily?: number;
+  fontSize?: number;
 }) => JSX.Element;
-export type colorFn = (node: HierarchyPointNode<Tree>) => string;
+
+/** @public */
+export type ColorFn = (node: HierarchyPointNode<Tree>) => string;
+
+/** @public */
+export interface PhyloTreeProps {
+  // Recursively defined tree object: `children` of a Tree are also a Tree */
+  tree: Tree;
+  // Maximum height in pixels
+  height?: number;
+  width?: number;
+  cladogram?: boolean;
+  showSupportValues?: boolean;
+  shadeBranchBySupport?: boolean;
+  colorFunction?: ColorFn;
+  fontSize?: number;
+  alignTips?: boolean;
+  leafTextComponent?: LeafFn;
+}
 
 /**
  * @public
- * @param param0
  * @returns JSX.Element
  */
 export function PhyloTree({
@@ -177,18 +193,7 @@ export function PhyloTree({
   fontSize = 10,
   alignTips = true,
   leafTextComponent = defaultLeafText,
-}: {
-  tree: Tree;
-  height?: number;
-  width?: number;
-  cladogram?: boolean;
-  showSupportValues?: boolean;
-  shadeBranchBySupport?: boolean;
-  colorFunction?: colorFn;
-  fontSize?: number;
-  alignTips?: boolean;
-  leafTextComponent?: LeafFn;
-}): JSX.Element {
+}: PhyloTreeProps): JSX.Element {
   const margin = {
     top: 10,
     bottom: 10,

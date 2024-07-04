@@ -2,9 +2,7 @@ import { useEffect, useRef } from "react";
 import { aaColors, ColorMap, PaletteName, BioLetter } from "./util";
 import { css } from "@emotion/css";
 
-/**
- * @public
- */
+/** @public */
 export type Sequence = {
   // Sequence identifier (e.g. from fasta header)
   header: string;
@@ -12,9 +10,7 @@ export type Sequence = {
   sequence: string;
 };
 
-/**
- * @public
- */
+/** @public */
 export type MSA = Sequence[];
 
 function RowNames({
@@ -94,26 +90,30 @@ function getConsensus(msa: MSA): string {
     .join("");
 }
 
-/**
- * @public
- */
+/** @public */
 export interface MultipleSequenceAlignmentProps {
   /**JSON formated multiple sequence alignment */
   msa: MSA;
-  /**Maximum width of the HTML element, if the MSA is wider a scroll bar appears */
+  /**Maximum width of the HTML element, if the MSA is wider a scroll bar appears (default = num_columns * colWidth) */
   width?: number;
-  height?: number;
-  palette?: string;
-  rowHeight?: number;
-  rowHeaderWidth?: number;
-  showRowHeader?: boolean;
+  /**Width in pixels of individual columns in the MSA visualization (default = 10)*/
   colWidth?: number;
+  /**Maximum height of the HTML element, if the MSA is higher a scroll bar appears (default = num_sequences * rowHeight)*/
+  height?: number;
+  /**Height in pixels of indivual rows in the MSA visualization (default = 10) */
+  rowHeight?: number;
+  /**Color palette for coloring different residue types (default = 'individual') */
+  palette?: PaletteName;
+  /**Whether or not to show sequence names (default = true)*/
+  showRowHeader?: boolean;
+  /**Maximum width in pixels of the sequence name field (default = 100) */
+  rowHeaderWidth?: number;
+  /**Whether or not to show letters for individual residues in the alignment */
   showText?: boolean;
 }
 
 /**
  * @public
- * @param param0
  * @returns
  */
 export function MultipleSequenceAlignment({
@@ -187,7 +187,7 @@ export function MultipleSequenceAlignment({
         overflow: "auto",
       })}`}
     >
-      {showRowHeader && rowHeight > 10 && (
+      {showRowHeader && (
         <RowNames
           msa={msaWithConsensus}
           height={maxHeight}

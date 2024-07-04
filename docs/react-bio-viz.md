@@ -63,7 +63,27 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
+[GeneModelProps](./react-bio-viz.genemodelprops.md)
+
+
+</td><td>
+
+
+
+</td></tr>
+<tr><td>
+
 [MultipleSequenceAlignmentProps](./react-bio-viz.multiplesequencealignmentprops.md)
+
+
+</td><td>
+
+
+
+</td></tr>
+<tr><td>
+
+[PhyloTreeProps](./react-bio-viz.phylotreeprops.md)
 
 
 </td><td>
@@ -87,6 +107,46 @@ Description
 
 </th></tr></thead>
 <tbody><tr><td>
+
+[ColorFn](./react-bio-viz.colorfn.md)
+
+
+</td><td>
+
+
+
+</td></tr>
+<tr><td>
+
+[LeafFn](./react-bio-viz.leaffn.md)
+
+
+</td><td>
+
+
+
+</td></tr>
+<tr><td>
+
+[MSA](./react-bio-viz.msa.md)
+
+
+</td><td>
+
+
+
+</td></tr>
+<tr><td>
+
+[PaletteName](./react-bio-viz.palettename.md)
+
+
+</td><td>
+
+
+
+</td></tr>
+<tr><td>
 
 [Sequence](./react-bio-viz.sequence.md)
 

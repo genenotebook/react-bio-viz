@@ -77,6 +77,7 @@ const aaIndividualAas: ColorMap = new Map(
   }),
 );
 
+/** @public */
 export type PaletteName = 'polarity' | 'individual';
 
 type PaletteMap = Map<PaletteName, ColorMap>;

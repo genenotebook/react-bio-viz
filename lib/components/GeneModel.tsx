@@ -125,7 +125,7 @@ export type SequenceInterval = {
   /**
    * Child sequence intervals of the current sequence interval. This makes
    * that genemodels can be represented as a Directed Acyclic Graph. A common
-   * representation is `gene` -> `mRNA(s)` -> `exon(s)`
+   * representation is `gene` -\> `mRNA(s)` -\> `exon(s)`
    */
   children?: SequenceInterval[];
 };
@@ -273,6 +273,24 @@ function defaultPopoverFn(exon: SequenceInterval): JSX.Element {
   );
 }
 
+/** @public */
+export interface GeneModelProps {
+  // Recursively defined gene model object: SequenceInterval children are also SequenceIntervals
+  gene: SequenceInterval;
+  // Width in pixels of the rendered SVG element (default = 500)
+  width?: number;
+  // Seed string for random color generation (default = '42')
+  colorSeed?: string;
+  // Show a scalebar indicating genomic position (default = true)
+  showScale?: boolean;
+  // Popover function that can show exon specific information (default function shows all information from gff3 spec)
+  exonPopoverFn?: (arg0: SequenceInterval) => JSX.Element;
+  // Percentage along the x-axis where the visualization should start (default = 0, range = 0-100)
+  panMin?: number;
+  // Percentage along the x-axis where the visualization should end (default = 100, range = 0-100)
+  panMax?: number;
+}
+
 /**
  * @public
  * GeneModel component
@@ -294,12 +312,15 @@ function defaultPopoverFn(exon: SequenceInterval): JSX.Element {
  *  )
  * </ReactResizeDetector>
  * ```
- * @param options
- * @param options.gene - SequenceInterval object of the gene
- * @param options.width - Width of the rendered SVG element (default = 500)
- * @param options.colorSeed - String to be used as seed for random color generation (default = "42")
- * @param options.showScale - Show a scalebar indicating genomic position (default = true)
- * @returns JSX.Element
+ *
+ * @example Zooming in on the left-most half of the gene
+ *
+ *```typescript
+ * import { GeneModel } from 'react-bio-viz';
+ * <GeneModel gene={gene} panMin={0} panMax={50} />
+ * ```
+ *
+ * @returns SVG visualation of a (potentially spliced) gene model containing mRNA, exons, and CDSs
  */
 export function GeneModel({
   gene,
@@ -309,15 +330,7 @@ export function GeneModel({
   exonPopoverFn = defaultPopoverFn,
   panMin = 0,
   panMax = 100,
-}: {
-  gene: SequenceInterval;
-  width?: number;
-  colorSeed?: string;
-  showScale?: boolean;
-  exonPopoverFn?: (arg0: SequenceInterval) => JSX.Element;
-  panMin?: number;
-  panMax?: number;
-}): JSX.Element {
+}: GeneModelProps): JSX.Element {
   const _panMin = Math.min(Math.max(0, panMin), 100) / 100;
   const _panMax = 1 - Math.max(Math.min(100, panMax), 0) / 100;
   const geneLength = gene.end - gene.start;

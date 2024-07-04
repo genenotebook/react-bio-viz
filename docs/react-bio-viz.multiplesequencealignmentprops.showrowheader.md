@@ -4,6 +4,8 @@
 
 ## MultipleSequenceAlignmentProps.showRowHeader property
 
+Whether or not to show sequence names (default = true)
+
 **Signature:**
 
 ```typescript

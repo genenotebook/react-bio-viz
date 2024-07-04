@@ -4,6 +4,8 @@
 
 ## MultipleSequenceAlignmentProps.rowHeaderWidth property
 
+Maximum width in pixels of the sequence name field (default = 100)
+
 **Signature:**
 
 ```typescript

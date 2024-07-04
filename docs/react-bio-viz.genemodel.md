@@ -9,15 +9,7 @@ GeneModel component
 **Signature:**
 
 ```typescript
-export declare function GeneModel({ gene, width, colorSeed, showScale, exonPopoverFn, panMin, panMax, }: {
-    gene: SequenceInterval;
-    width?: number;
-    colorSeed?: string;
-    showScale?: boolean;
-    exonPopoverFn?: (arg0: SequenceInterval) => JSX.Element;
-    panMin?: number;
-    panMax?: number;
-}): JSX.Element;
+export declare function GeneModel({ gene, width, colorSeed, showScale, exonPopoverFn, panMin, panMax, }: GeneModelProps): JSX.Element;
 ```
 
 ## Parameters
@@ -45,7 +37,7 @@ Description
 
 </td><td>
 
-{ gene: [SequenceInterval](./react-bio-viz.sequenceinterval.md)<!-- -->; width?: number; colorSeed?: string; showScale?: boolean; exonPopoverFn?: (arg0: [SequenceInterval](./react-bio-viz.sequenceinterval.md)<!-- -->) =&gt; JSX.Element; panMin?: number; panMax?: number; }
+[GeneModelProps](./react-bio-viz.genemodelprops.md)
 
 
 </td><td>
@@ -57,7 +49,7 @@ Description
 
 JSX.Element
 
-JSX.Element
+SVG visualation of a (potentially spliced) gene model containing mRNA, exons, and CDSs
 
 ## Example 1
 
@@ -80,5 +72,14 @@ import ReactResizeDetector from 'react-resize-detector';
    <GeneModel gene={gene} width={wdith} />
  )
 </ReactResizeDetector>
+```
+
+## Example 3
+
+Zooming in on the left-most half of the gene
+
+```typescript
+import { GeneModel } from 'react-bio-viz';
+<GeneModel gene={gene} panMin={0} panMax={50} />
 ```
 

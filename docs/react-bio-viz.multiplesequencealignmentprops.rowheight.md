@@ -4,6 +4,8 @@
 
 ## MultipleSequenceAlignmentProps.rowHeight property
 
+Height in pixels of indivual rows in the MSA visualization (default = 10)
+
 **Signature:**
 
 ```typescript
