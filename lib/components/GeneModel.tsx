@@ -249,24 +249,21 @@ function defaultPopoverFn(exon: SequenceInterval): JSX.Element {
       <li>Type: {exon.interval_type}</li>
       {Object.entries(exon.attributes).map(
         ([attributeName, attributeValues]) => {
-          if (Array.isArray(attributeValues) && attributeValues.length > 1) {
-            return (
-              <li>
-                {attributeName}:
+          return (
+            <li key={attributeName}>
+              {Array.isArray(attributeValues) && attributeValues.length > 1 ? (
                 <ul>
                   {attributeValues.map((attributeValue) => (
-                    <li>{attributeValue}</li>
+                    <li key={attributeValue}>{attributeValue}</li>
                   ))}
                 </ul>
-              </li>
-            );
-          } else {
-            return (
-              <li>
-                {attributeName}: {attributeValues}
-              </li>
-            );
-          }
+              ) : (
+                <>
+                  {attributeName}: {attributeValues}
+                </>
+              )}
+            </li>
+          );
         }
       )}
     </ul>

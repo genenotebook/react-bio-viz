@@ -104,12 +104,14 @@ export interface MultipleSequenceAlignmentProps {
   rowHeight?: number;
   /**Color palette for coloring different residue types (default = 'individual') */
   palette?: PaletteName;
-  /**Whether or not to show sequence names (default = true)*/
+  /**Show sequence names (default = true)*/
   showRowHeader?: boolean;
   /**Maximum width in pixels of the sequence name field (default = 100) */
   rowHeaderWidth?: number;
-  /**Whether or not to show letters for individual residues in the alignment */
+  /**Show letters for individual residues in the alignment */
   showText?: boolean;
+  /**Add consensus sequence at the top of the alignment */
+  addConsensus?: boolean;
 }
 
 /**
@@ -126,6 +128,7 @@ export function MultipleSequenceAlignment({
   showRowHeader = true,
   colWidth = 10,
   showText = true,
+  addConsensus = true,
 }: MultipleSequenceAlignmentProps): JSX.Element {
   const msaWidth = Object.values(msa)[0].sequence.length * colWidth;
   const canvasWidth =
@@ -139,10 +142,9 @@ export function MultipleSequenceAlignment({
     ? (aaColors.get(palette as PaletteName) as ColorMap)
     : (aaColors.get("polarity") as ColorMap);
 
-  const msaWithConsensus = [
-    { header: "Consensus", sequence: getConsensus(msa) },
-    ...msa,
-  ];
+  const msaWithConsensus = addConsensus
+    ? [{ header: "Consensus", sequence: getConsensus(msa) }, ...msa]
+    : msa;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -184,7 +186,9 @@ export function MultipleSequenceAlignment({
       className={`multiple-sequence-alignment ${css({
         display: "flex",
         maxHeight,
-        overflow: "auto",
+        maxWidth,
+        overflowX: msaWidth < maxWidth ? "hidden" : "auto",
+        overflowY: canvasHeight < maxHeight ? "hidden" : "auto",
       })}`}
     >
       {showRowHeader && (
