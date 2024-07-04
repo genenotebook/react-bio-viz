@@ -7,17 +7,7 @@
 **Signature:**
 
 ```typescript
-export declare function MultipleSequenceAlignment({ msa, width, height, palette, rowHeight, rowHeaderWidth, showRowHeader, colWidth, showText, }: {
-    msa: MSA;
-    width?: number;
-    height?: number;
-    palette?: string;
-    rowHeight?: number;
-    rowHeaderWidth?: number;
-    showRowHeader?: boolean;
-    colWidth?: number;
-    showText?: boolean;
-}): JSX.Element;
+export declare function MultipleSequenceAlignment({ msa, width, height, palette, rowHeight, rowHeaderWidth, showRowHeader, colWidth, showText, }: MultipleSequenceAlignmentProps): JSX.Element;
 ```
 
 ## Parameters
@@ -45,7 +35,7 @@ Description
 
 </td><td>
 
-{ msa: MSA; width?: number; height?: number; palette?: string; rowHeight?: number; rowHeaderWidth?: number; showRowHeader?: boolean; colWidth?: number; showText?: boolean; }
+[MultipleSequenceAlignmentProps](./react-bio-viz.multiplesequencealignmentprops.md)
 
 
 </td><td>

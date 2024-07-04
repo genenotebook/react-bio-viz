@@ -48,6 +48,31 @@ GeneModel component
 </td></tr>
 </tbody></table>
 
+## Interfaces
+
+<table><thead><tr><th>
+
+Interface
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[MultipleSequenceAlignmentProps](./react-bio-viz.multiplesequencealignmentprops.md)
+
+
+</td><td>
+
+
+
+</td></tr>
+</tbody></table>
+
 ## Type Aliases
 
 <table><thead><tr><th>

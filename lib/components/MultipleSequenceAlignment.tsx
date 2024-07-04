@@ -96,6 +96,23 @@ function getConsensus(msa: MSA): string {
 
 /**
  * @public
+ */
+export interface MultipleSequenceAlignmentProps {
+  /**JSON formated multiple sequence alignment */
+  msa: MSA;
+  /**Maximum width of the HTML element, if the MSA is wider a scroll bar appears */
+  width?: number;
+  height?: number;
+  palette?: string;
+  rowHeight?: number;
+  rowHeaderWidth?: number;
+  showRowHeader?: boolean;
+  colWidth?: number;
+  showText?: boolean;
+}
+
+/**
+ * @public
  * @param param0
  * @returns
  */
@@ -109,18 +126,7 @@ export function MultipleSequenceAlignment({
   showRowHeader = true,
   colWidth = 10,
   showText = true,
-}: {
-  /**JSON formated multiple sequence alignment */
-  msa: MSA;
-  width?: number;
-  height?: number;
-  palette?: string;
-  rowHeight?: number;
-  rowHeaderWidth?: number;
-  showRowHeader?: boolean;
-  colWidth?: number;
-  showText?: boolean;
-}): JSX.Element {
+}: MultipleSequenceAlignmentProps): JSX.Element {
   const msaWidth = Object.values(msa)[0].sequence.length * colWidth;
   const canvasWidth =
     typeof width !== "undefined" ? Math.max(width, msaWidth) : msaWidth;
