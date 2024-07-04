@@ -24,6 +24,8 @@ Description
 
 </td><td>
 
+React components for biological data visualization
+
 
 </td></tr>
 </tbody></table>

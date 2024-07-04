@@ -4,6 +4,8 @@
 
 ## react-bio-viz package
 
+React components for biological data visualization
+
 ## Functions
 
 <table><thead><tr><th>
@@ -24,7 +26,7 @@ Description
 
 </td><td>
 
-GeneModel component
+GeneModel component, genome browser style. Visualizes gene, mRNA, CDS and exon relationships. Exons have popover menu's that display additional information.
 
 
 </td></tr>

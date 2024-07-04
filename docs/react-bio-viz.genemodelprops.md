@@ -49,7 +49,7 @@ string
 
 </td><td>
 
-_(Optional)_
+_(Optional)_ Seed string for random color generation
 
 
 </td></tr>

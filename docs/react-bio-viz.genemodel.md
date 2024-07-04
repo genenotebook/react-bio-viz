@@ -4,7 +4,7 @@
 
 ## GeneModel() function
 
-GeneModel component
+GeneModel component, genome browser style. Visualizes gene, mRNA, CDS and exon relationships. Exons have popover menu's that display additional information.
 
 **Signature:**
 
@@ -69,7 +69,7 @@ import { GeneModel } from 'react-bio-viz';
 import ReactResizeDetector from 'react-resize-detector';
 <ReactResizeDetector handleWidth>
  ({width}) => (
-   <GeneModel gene={gene} width={wdith} />
+   <GeneModel gene={gene} width={width} />
  )
 </ReactResizeDetector>
 ```

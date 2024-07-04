@@ -279,7 +279,10 @@ export interface GeneModelProps {
   gene: SequenceInterval;
   // Width in pixels of the rendered SVG element (default = 500)
   width?: number;
-  // Seed string for random color generation (default = '42')
+  /**
+   * Seed string for random color generation
+   * @defaultValue 42
+   */
   colorSeed?: string;
   // Show a scalebar indicating genomic position (default = true)
   showScale?: boolean;
@@ -293,7 +296,8 @@ export interface GeneModelProps {
 
 /**
  * @public
- * GeneModel component
+ * GeneModel component, genome browser style. Visualizes gene, mRNA, CDS and exon relationships.
+ * Exons have popover menu's that display additional information.
  * @example A minimal setting:
  *
  * ```typescript
@@ -308,7 +312,7 @@ export interface GeneModelProps {
  * import ReactResizeDetector from 'react-resize-detector';
  * <ReactResizeDetector handleWidth>
  *  ({width}) => (
- *    <GeneModel gene={gene} width={wdith} />
+ *    <GeneModel gene={gene} width={width} />
  *  )
  * </ReactResizeDetector>
  * ```

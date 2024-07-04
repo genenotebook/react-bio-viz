@@ -4,6 +4,8 @@
 
 ## GeneModelProps.colorSeed property
 
+Seed string for random color generation
+
 **Signature:**
 
 ```typescript

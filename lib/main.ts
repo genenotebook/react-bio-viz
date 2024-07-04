@@ -1,3 +1,9 @@
+/**
+ * React components for biological data visualization
+ * 
+ * @packageDocumentation 
+ */
+
 export { MultipleSequenceAlignment } from './components/MultipleSequenceAlignment';
 export type { Sequence, MultipleSequenceAlignmentProps, MSA } from './components/MultipleSequenceAlignment.tsx';
 export { GeneModel } from './components/GeneModel';
