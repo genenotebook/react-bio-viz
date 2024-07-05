@@ -130,7 +130,7 @@ export function MultipleSequenceAlignment({
   showText = true,
   addConsensus = true,
 }: MultipleSequenceAlignmentProps): JSX.Element {
-  const msaWidth = Object.values(msa)[0].sequence.length * colWidth;
+  const msaWidth = msa[0].sequence.length * colWidth;
   const canvasWidth =
     typeof width !== "undefined" ? Math.max(width, msaWidth) : msaWidth;
 
@@ -187,8 +187,8 @@ export function MultipleSequenceAlignment({
         display: "flex",
         maxHeight,
         maxWidth,
-        overflowX: msaWidth < maxWidth ? "hidden" : "auto",
-        overflowY: canvasHeight < maxHeight ? "hidden" : "auto",
+        overflowX: msaWidth <= maxWidth ? "hidden" : "auto",
+        overflowY: canvasHeight <= maxHeight ? "hidden" : "auto",
       })}`}
     >
       {showRowHeader && (

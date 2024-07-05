@@ -140,7 +140,6 @@ export default function App(): JSX.Element {
           height={250}
           rowHeight={1}
           showRowHeader={false}
-          rowHeaderWidth={150}
           showText={false}
           palette="individual"
         />
