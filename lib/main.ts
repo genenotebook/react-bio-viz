@@ -5,7 +5,7 @@
  */
 
 export { MultipleSequenceAlignment } from './components/MultipleSequenceAlignment';
-export type { Sequence, MultipleSequenceAlignmentProps, MSA } from './components/MultipleSequenceAlignment.tsx';
+export type { Sequence, MultipleSequenceAlignmentProps, AlignedSequences } from './components/MultipleSequenceAlignment';
 export { GeneModel } from './components/GeneModel';
 export type { SequenceInterval, GeneModelProps } from './components/GeneModel';
 export { PhyloTree } from './components/PhyloTree';

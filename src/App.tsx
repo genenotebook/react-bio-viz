@@ -132,27 +132,7 @@ export default function App(): JSX.Element {
 
       <section className="section">
         <h1 className="title">Multiple Sequence Alignment</h1>
-        <h2 className="subtitle">Overview</h2>
-        <MultipleSequenceAlignment
-          msa={msa}
-          colWidth={750 / msa[0].sequence.length}
-          width={750}
-          height={250}
-          rowHeight={1}
-          showRowHeader={false}
-          showText={false}
-          palette="individual"
-        />
-
-        <h2 className="subtitle">Detail</h2>
-        <MultipleSequenceAlignment
-          msa={msa}
-          width={750}
-          rowHeight={12}
-          rowHeaderWidth={150}
-          height={500}
-          palette="individual"
-        />
+        <MultipleSequenceAlignment msa={msa} width={750} showOverview={true} />
       </section>
 
       <hr />
