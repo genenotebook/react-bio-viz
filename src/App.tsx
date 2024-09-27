@@ -74,7 +74,7 @@ export default function App(): JSX.Element {
   });
 
   return (
-    <div className="container">
+    <div className="container" style={{ margin: 0, padding: 0 }}>
       <hr />
       <section className="section">
         <h1 className="title">GeneModel </h1>
@@ -132,7 +132,7 @@ export default function App(): JSX.Element {
 
       <section className="section">
         <h1 className="title">Multiple Sequence Alignment</h1>
-        <MultipleSequenceAlignment msa={msa} width={750} showOverview={true} />
+        <MultipleSequenceAlignment msa={msa} />
       </section>
 
       <hr />

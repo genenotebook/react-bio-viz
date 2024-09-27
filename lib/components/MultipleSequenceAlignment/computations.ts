@@ -1,10 +1,10 @@
-import type { AlignedSequences } from ".";
+import type { AlignedSequences, Sequence } from ".";
 
-export function getConsensus(msa: AlignedSequences): string {
+export function getConsensus(msa: AlignedSequences): Sequence {
   const transposedMsa = msa[0].sequence
     .split("")
     .map((_, colIndex) => msa.map(({ sequence }) => sequence.charAt(colIndex)));
-  return transposedMsa
+  const consensusSequence = transposedMsa
     .map((seq: string[]) => {
       const countMap: Map<string, number> = new Map();
       let max = seq[0];
@@ -21,4 +21,5 @@ export function getConsensus(msa: AlignedSequences): string {
       return max;
     })
     .join("");
+  return { header: "Consensus", sequence: consensusSequence };
 }
