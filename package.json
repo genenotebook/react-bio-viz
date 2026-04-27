@@ -66,7 +66,7 @@
     "react-popper": "^2.3.0",
     "sass": "^1.77.6",
     "typescript": "^5.2.2",
-    "vite": "^5.3.1",
+    "vite": "^6.0.0",
     "vite-plugin-dts": "^3.9.1",
     "zustand": "^5.0.0-rc.2"
   }
